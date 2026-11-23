@@ -22,23 +22,23 @@
 
 ### 1.2. Hiện trạng máy cục bộ (đã kiểm tra thực tế)
 - **Git global config:** `user.name = NhatCam2006` | `user.email = camdn.24ite@vku.udn.vn`
-- **Git credential helper:** đang trống (cần chạy `gh auth login` 1 lần trước khi push/tạo PR từ CLI).
+- **GitHub CLI & xác thực:** `gh` **v2.105.0** đã cài (`C:\Program Files\GitHub CLI\gh.exe`) và **đã đăng nhập tài khoản `NhatCam2006`** (scopes: `gist`, `read:org`, `repo`, `workflow`; `git push` hoạt động bình thường). *(Lưu ý: nếu cần thao tác GitHub Projects v2 qua CLI, chạy thêm 1 lần `gh auth refresh -s project`.)*
 - **Công cụ đã cài sẵn (`FOUND`):**
   - `git`
   - `python` **3.11.9** & `uv` **0.13.7** *(đã tạo `.python-version = 3.11` để cố định môi trường chuẩn local và sẵn sàng nếu sau này deploy)*
   - `node` **v26.13.1** & `npm` **11.6.4** *(Lưu ý: Node rất mới — `frontend-3d` bắt buộc chạy `npm install` + `npm run build` kiểm chứng tương thích `react-force-graph-3d` ngay Ngày 1)*
-  - `gh` **v2.105.0** *(GitHub CLI đã cài sẵn — chỉ cần PM chạy `gh auth login`)*
 
 ### 1.3. Tổ chức tài liệu trong `vku-sprintguard/` (Tách bạch Tracked vs. Ignored)
 - **Track trong Git (`docs/planning/` — mọi worker ở các worktree đều đọc được):**
   - `docs/planning/PROJECT-DECISIONS.md` — Tài liệu chốt quyết định và bàn giao Swarm này.
   - `docs/planning/VKU-SprintGuard-Blueprint.md` — Kiến trúc sản phẩm, Harness 5 trạm, 6 MCP tools, JSON schema và giao diện Web 3D.
-- **Giữ cục bộ, KHÔNG push lên repo public (`docs/reference/` — đã đưa vào `.gitignore`):**
+- **Giữ cục bộ, KHÔNG push lên repo public (`docs/reference/` — đã đưa vào `.gitignore`, đủ 5/5 tài liệu):**
   - `docs/reference/Project-Guidelines.md`
+  - `docs/reference/Project-Charter-Template.md` *(sao chép từ `Template.md` — mẫu 13 mục chuẩn)*
   - `docs/reference/EvidencePackageChecklist.md`
   - `docs/reference/MilestoneRubric.md`
   - `docs/reference/RiskRegisterTemplate.md`
-  - *(Coordinator đọc trực tiếp các file này ở main worktree; nếu có thêm `Project-Charter-Template.md` thì thả vào `docs/reference/`, nếu không có thì dùng chuẩn 13 mục PMBOK trong `Project-Guidelines.md`.)*
+  - *(Coordinator đọc trực tiếp 5 file tham chiếu này ở main worktree để lập Charter, WBS, Risk Register, Checklist và Slide khớp 100% biểu mẫu giảng viên.)*
 
 ---
 
@@ -93,7 +93,7 @@
 Hãy mở cửa sổ Antigravity trực tiếp tại thư mục **`d:\_Study\Home\Project Management\vku-sprintguard`** (đã có `.git`), gõ `/teamwork` và dán đoạn sau:
 
 ```text
-Đọc kỹ các tài liệu nền trong repo: `docs/planning/PROJECT-DECISIONS.md`, `docs/planning/VKU-SprintGuard-Blueprint.md`, và toàn bộ file tham chiếu trong `docs/reference/` (`Project-Guidelines.md`, `EvidencePackageChecklist.md`, `MilestoneRubric.md`, `RiskRegisterTemplate.md`, cùng `Project-Charter-Template.md` nếu có).
+Đọc kỹ các tài liệu nền trong repo: `docs/planning/PROJECT-DECISIONS.md`, `docs/planning/VKU-SprintGuard-Blueprint.md`, và đủ 5 file tham chiếu trong `docs/reference/` (`Project-Guidelines.md`, `Project-Charter-Template.md`, `EvidencePackageChecklist.md`, `MilestoneRubric.md`, `RiskRegisterTemplate.md`).
 
 Thông tin cá nhân của tôi (Human PM):
 - Họ tên: [Điền họ tên]
