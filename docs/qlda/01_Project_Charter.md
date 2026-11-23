@@ -24,7 +24,7 @@
 | **Creation Date** | 23/11/2026 |
 | **Document Version** | Version 1.0 (Draft — Pending PM Gate 1 Approval) |
 | **Primary GitHub Repository** | `https://github.com/NhatCam2006/vku-sprintguard` |
-| **GitHub Project Board URL** | Pending PM `gh auth refresh -s project,read:project` at Gate 1 (Milestone M2) |
+| **GitHub Project Board URL** | `https://github.com/users/NhatCam2006/projects/1` |
 
 ---
 
