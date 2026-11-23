@@ -2,7 +2,7 @@
 
 **Mục đích file:** Đóng gói toàn bộ thông tin hành chính, cấu hình môi trường thực tế, 6 điểm phòng ngừa kỹ thuật, bảng phân vai Swarm và 7 nhánh quyết định đã chốt sau phiên `/grill-me` ngày 23/11/2026 để **Coordinator / Swarm** ở phiên làm việc mới đọc vào là chạy ngay, không cần hỏi lại từ đầu.
 
-> **Quy tắc ưu tiên tài liệu:** Khi có điểm tinh chỉnh sau `/grill-me`, **`PROJECT-DECISIONS.md` ưu tiên cao hơn `VKU-SprintGuard-Blueprint.md`** — cụ thể ở 2 điểm: *(1)* Màn hình mở đầu (Landing) giữ tối giản trước rồi bấm mới vào không gian 3D Mission Control; *(2)* Backend dùng SQLite + tự động nạp sẵn (seed) các bản Deep Audit đã chốt trong repo khi khởi động để không mất dữ liệu khi Render free tier ngủ đông/restart.
+> **Quy tắc ưu tiên tài liệu:** Khi có điểm tinh chỉnh sau `/grill-me`, **`PROJECT-DECISIONS.md` ưu tiên cao hơn `VKU-SprintGuard-Blueprint.md`** — cụ thể ở 3 điểm: *(1)* Màn hình mở đầu (Landing) giữ tối giản trước rồi bấm mới vào không gian 3D Mission Control; *(2)* Backend dùng SQLite + tự động nạp sẵn (seed) các bản Deep Audit đã chốt trong repo khi khởi động để không mất dữ liệu demo; *(3)* **Local-First (tạm bỏ bước deploy cloud Vercel/Render)** — ưu tiên xây dựng và kiểm thử chạy mượt 100% trên máy cục bộ (`localhost`) trước, chỉ cân nhắc deploy HTTPS ở chặng cuối nếu cần nộp Form VKU.
 
 ---
 
@@ -25,7 +25,7 @@
 - **Git credential helper:** đang trống (cần chạy `gh auth login` 1 lần trước khi push/tạo PR từ CLI).
 - **Công cụ đã cài sẵn (`FOUND`):**
   - `git`
-  - `python` **3.11.9** & `uv` **0.13.7** *(đã tạo `.python-version = 3.11` để khớp giữa máy local và Render)*
+  - `python` **3.11.9** & `uv` **0.13.7** *(đã tạo `.python-version = 3.11` để cố định môi trường chuẩn local và sẵn sàng nếu sau này deploy)*
   - `node` **v26.13.1** & `npm` **11.6.4** *(Lưu ý: Node rất mới — `frontend-3d` bắt buộc chạy `npm install` + `npm run build` kiểm chứng tương thích `react-force-graph-3d` ngay Ngày 1)*
   - `gh` **v2.105.0** *(GitHub CLI đã cài sẵn — chỉ cần PM chạy `gh auth login`)*
 
@@ -52,7 +52,7 @@
 | **4. Triết lý đánh giá sản phẩm** | **Decision Support System** (không chấm điểm cứng 0–100). | Tự nhận diện ngữ cảnh (`solo` / `student_team` / `open_source`), gắn 3 mức tín hiệu (`healthy` / `probe` / `risk`) kèm `evidence_ref` thật và câu hỏi phỏng vấn cho Giảng viên. |
 | **5. Giao diện Web 3D & Landing UX** | Phong cách **Interstellar Light Minimalism** nền trắng (`#FFFFFF`), 95% đơn sắc trắng–đen–xám, chỉ tô Vàng (`#D97706`) / Đỏ (`#DC2626`) khi có tín hiệu `probe`/`risk`; 2 font **Montserrat + Inter**. | Đồ thị **Kiểu A — Clustered 3D Network** (15–40 nodes) + Timeline 2D + Side Inspector. **Màn hình mở đầu tối giản:** ô nhập link GitHub (Live 3D Preview) + thẻ chọn nhanh các bản Deep Audit mẫu; bấm vào mới mở không gian 3D Mission Control. |
 | **6. Tiến độ & GitHub Ecosystem** | **Rải đều 5–7 ngày**, merge PR/Issue thật mỗi ngày, tách rõ **Sprint 1** & **Sprint 2**. | Tuyệt đối không làm giả ngày commit quá khứ. Quản lý trên **GitHub Projects 5 cột** (`Backlog → Ready → In Progress → In Review → Done`), gắn Milestone Sprint 1/2, có Burndown chart và Release tag `v1.0.0`. |
-| **7. Deploy HTTPS & Lưu trữ** | Frontend trên **Vercel / Cloudflare Pages**; Backend Python trên **Render** (gói miễn phí). | Dùng **SQLite + tự động nạp sẵn (seed) các bản Deep Audit đã chốt trong repo** khi server khởi động để không bị mất dữ liệu demo khi Render restart/ngủ đông. |
+| **7. Môi trường chạy & Lưu trữ (Local-First)** | **Tạm bỏ bước deploy cloud (Vercel/Render)**; tập trung chạy mượt 100% trên máy cục bộ (`localhost`). | Dùng **SQLite + tự động nạp sẵn (seed) các bản Deep Audit đã chốt trong repo** khi server khởi động để mở lên là có dữ liệu demo ngay. Sau khi bản local hoàn hảo mới cân nhắc deploy HTTPS (Vercel/Render) nếu cần cho Form VKU. |
 | **8. Stakeholder & UAT thật** | **Pathway 3:** Có bạn bè tại VKU dùng thử bản Live trên repo thật của họ để xác nhận UAT. | Swarm chuẩn bị sẵn kịch bản test UAT và biểu mẫu/email xác nhận cho `07_Stakeholder_Acceptance_Signoff.pdf`. |
 | **9. Bộ 8 file nộp Google Drive** | Swarm **xuất trọn bộ file hoàn chỉnh** (`PDF`, `.xlsx` có công thức cho Risk Register, Slide `.pptx`/`.pdf` 8–10 trang) theo đúng `Project-Guidelines.md` và các template trong `docs/reference/`. | Toàn bộ `01_Final_Technical_Report.pdf` viết ở **thì quá khứ**. Ghi nhận quyết định đổi từ LangGraph/Groq sang MCP Harness vào `06_Scope_Change_Control_Record.pdf` (CR-001). PM kiểm tra lại, ký xác nhận và đính bằng chứng UAT thật trước khi mở Drive công khai. |
 
@@ -79,10 +79,10 @@
 
 | Thành viên | Model chính (Dự phòng khi hết quota) | Workspace Mode | Được phép làm (*Ownership*) | Cấm làm (*Hard Boundaries*) |
 | :--- | :--- | :--- | :--- | :--- |
-| **👤 `Human PM`** *(Bạn — `NhatCam2006`)* | Con người | — | Duyệt Sprint Plan, chốt các PR vào `main`, xác nhận HITL, phối hợp bạn bè VKU test UAT, deploy tài khoản cá nhân & ký hồ sơ. | Không phải tự ngồi viết code thủ công. |
+| **👤 `Human PM`** *(Bạn — `NhatCam2006`)* | Con người | — | Duyệt Sprint Plan, chốt các PR vào `main`, xác nhận HITL, chạy thử kiểm chứng trên máy cục bộ, phối hợp bạn bè test UAT & ký hồ sơ (chỉ deploy HTTPS sau cùng nếu cần). | Không phải tự ngồi viết code thủ công. |
 | **🧭 `coordinator`** *(PM Lead / Scrum Master)* | `Gemini 4 Neon (High)` *(`Gemini 4 Argon Medium` / `Claude Opus 5.5 Medium`)* | Main repo (`vku-sprintguard/`) | Giữ bức tranh tổng thể, chia Story theo nhịp 5–7 ngày, giao task cho worker, kiểm tra chéo trước khi báo bạn, **duy nhất được merge vào `main` sau khi `qa-docs` PASS**. | Không ôm viết code tính năng thay worker; không bỏ qua cổng QA/Review. |
 | **🏛️ `architect-mcp`** *(Tech Lead & MCP Harness)* | `Gemini 4 Neon (High)` *(`Claude Opus 5.5 Medium` / `Gemini 4 Argon High`)* | `share` (worktree riêng) | Thiết kế cấu trúc repo, `schemas.py`, toàn bộ `mcp_server/` (6 tools + State Machine 5 trạm + Evidence Grounding), `skills/sprintguard-auditor/SKILL.md`, `.github/workflows/ci.yml`. | Không sửa code `frontend/`; không tự merge `main`. |
-| **⚙️ `backend-dev`** *(Backend Engineer)* | `Gemini 4 Neon (High)` *(`Gemini 4 Argon High` / `Claude Opus 5.5 Medium`)* | `share` (worktree riêng) | Code toàn bộ `backend/app/` (GitHub API client, diff filter, module clusterer 15–40 nodes, Timeline 2D, FastAPI endpoints, SQLite + auto-seed cho Render) & `backend/tests/` (`pytest`). | Không sửa `frontend/` và `mcp_server/`; không tự merge `main`. |
+| **⚙️ `backend-dev`** *(Backend Engineer)* | `Gemini 4 Neon (High)` *(`Gemini 4 Argon High` / `Claude Opus 5.5 Medium`)* | `share` (worktree riêng) | Code toàn bộ `backend/app/` (GitHub API client, diff filter, module clusterer 15–40 nodes, Timeline 2D, FastAPI endpoints, SQLite + auto-seed dữ liệu mẫu) & `backend/tests/` (`pytest`). | Không sửa `frontend/` và `mcp_server/`; không tự merge `main`. |
 | **🎨 `frontend-3d`** *(Frontend 3D Engineer)* | `Gemini 4 Neon (High)` *(`Gemini 4 Argon High` / `Claude Opus 5.5 Medium`)* | `share` (worktree riêng) | Code toàn bộ `frontend/` (Landing tối giản nền trắng + Graph 3D Interstellar Kiểu A + Timeline 2D + Side Inspector + Focus/Fly-to/X-Ray + font Montserrat/Inter) & `vitest`/build. | Không sửa `backend/` và `mcp_server/`; không tự merge `main`. |
 | **🔍 `qa-docs`** *(QA Reviewer & Hồ sơ QLDA — việc gọn/ít lượt)* | `Claude Opus 5.5 (Medium)` *(`Gemini 4 Argon Medium` → `Gemini 4 Neon Medium`)* | `inherit` | Review PR độc lập (PASS/FAIL kèm bằng chứng lệnh chạy thật), lưu ảnh/snapshot lịch sử board Sprint 1 & 2, soạn & xuất trọn bộ **8 file Drive** (`PDF`, `.xlsx` có công thức, Slide 8–10 trang). | **Cấm sửa code tính năng của Dev** (lỗi trả về đúng worker sửa); không tự merge `main`. |
 
@@ -103,7 +103,7 @@ Thông tin cá nhân của tôi (Human PM):
 
 Hãy đóng vai `coordinator` (model Gemini 4 Neon High) điều phối Antigravity Swarm đúng theo Bảng Phân vai, 6 Điểm phòng ngừa và Model ở Phần 2–3 của `docs/planning/PROJECT-DECISIONS.md` (chỉ dùng bộ 3 Neon / Opus / Argon; nếu vai nào hết quota thì dùng `swarm(action="model")` đổi nóng sang model dự phòng trong bộ 3, không kill worker):
 1. Kiểm tra lại hiện trạng repo, GitHub auth (`gh auth status`) và tóm tắt thật ngắn gọn lộ trình 5–7 ngày (tách Sprint 1 & Sprint 2, rải commit/PR thật từng ngày) cho tôi duyệt.
-2. Spawn các worker đúng model đã chốt (`architect-mcp`, `backend-dev`, `frontend-3d` đều dùng `gemini-4-neon-high` với `workspace: "share"`; `qa-docs` dùng `claude-opus-5-5-medium` và chuyển nóng sang `gemini-4-argon-medium` khi hết quota với `workspace: "inherit"`) để lập bộ hồ sơ khởi tạo (`Project Charter`, `WBS`, `Risk Register` đợt 1), thiết lập GitHub Projects 5 cột + Story Points + Iteration + CI, và kiểm chứng build trên Node 26 / Python 3.11 rồi triển khai từng bước Sprint 1.
+2. Spawn các worker đúng model đã chốt (`architect-mcp`, `backend-dev`, `frontend-3d` đều dùng `gemini-4-neon-high` với `workspace: "share"`; `qa-docs` dùng `claude-opus-5-5-medium` và chuyển nóng sang `gemini-4-argon-medium` khi hết quota với `workspace: "inherit"`) để lập bộ hồ sơ khởi tạo (`Project Charter`, `WBS`, `Risk Register` đợt 1), thiết lập GitHub Projects 5 cột + Story Points + Iteration + CI, và kiểm chứng build trên Node 26 / Python 3.11 rồi triển khai từng bước Sprint 1 (**ưu tiên chạy mượt 100% trên máy cục bộ `localhost`, tạm bỏ qua bước deploy cloud cho tới khi tôi yêu cầu ở chặng cuối**).
 
 Luôn tóm tắt ngắn gọn, dễ hiểu ở mỗi cổng kiểm soát để tôi (PM) duyệt trước khi merge vào `main`.
 ```
