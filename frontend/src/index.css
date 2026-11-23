@@ -2,13 +2,37 @@
 
 :root {
   color-scheme: light;
-  background-color: #ffffff;
-  color: #09090b;
+  --bg-primary: #ffffff;
+  --bg-secondary: #fafafa;
+  --border-subtle: #e4e4e7;
+  --ink-primary: #09090b;
+  --ink-muted: #52525b;
+  --edge-default: #d4d4d8;
+  --signal-probe: #d97706;
+  --signal-risk: #dc2626;
 }
 
 body {
   margin: 0;
+  background-color: var(--bg-primary);
+  color: var(--ink-primary);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.font-display {
+  font-family: 'Montserrat', 'Inter', system-ui, sans-serif;
+}
+
+.orbital-grid {
   background-color: #ffffff;
-  color: #09090b;
-  font-family: Inter, system-ui, -apple-system, sans-serif;
+  background-image:
+    linear-gradient(to right, rgba(228, 228, 231, 0.55) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(228, 228, 231, 0.55) 1px, transparent 1px),
+    radial-gradient(circle at center, transparent 0, transparent 28%, rgba(228, 228, 231, 0.65) 28.2%, transparent 28.5%),
+    radial-gradient(circle at center, transparent 0, transparent 48%, rgba(228, 228, 231, 0.45) 48.2%, transparent 48.5%);
+  background-size:
+    48px 48px,
+    48px 48px,
+    100% 100%,
+    100% 100%;
 }
