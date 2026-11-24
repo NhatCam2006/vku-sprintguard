@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "sprintguard-mcp": {
+      "command": "uv",
+      "args": [
+        "run",
+        "--directory",
+        "<REPO_PATH>/backend",
+        "python",
+        "<REPO_PATH>/mcp_server/server.py"
+      ],
+      "env": {
+        "SPRINTGUARD_API_URL": "http://localhost:8000",
+        "PUBLISH_API_KEY": "replace-with-your-publish-api-key",
+        "GITHUB_TOKEN": "replace-with-optional-github-pat"
+      }
+    }
+  }
+}
