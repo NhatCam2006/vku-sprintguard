@@ -46,6 +46,8 @@ export interface GraphNode {
   size: number;
   churn?: number | null;
   status: NodeStatus;
+  description?: string;
+  key_files?: string[];
 }
 
 export interface GraphEdge {
@@ -84,6 +86,16 @@ export interface InterviewQuestion {
   evidence_ref: string;
 }
 
+export interface CommitHighlight {
+  ref: string;
+  url: string;
+  author: string;
+  date?: string;
+  title: string;
+  diff_summary: string;
+  files_changed?: string[];
+}
+
 export interface AuditReport {
   audit_id: string;
   created_at: string;
@@ -94,4 +106,5 @@ export interface AuditReport {
   timeline_2d: TimelineWeek[];
   signals: AuditSignal[];
   interview_questions: InterviewQuestion[];
+  commit_highlights?: CommitHighlight[];
 }

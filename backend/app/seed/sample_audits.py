@@ -2,6 +2,7 @@ from app.core.schemas import (
     AuditReport,
     AuditSignal,
     AuditSummary,
+    CommitHighlight,
     Graph3D,
     GraphEdge,
     GraphNode,
@@ -46,6 +47,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Team Lead / Backend",
                     size=56,
                     status="healthy",
+                    description=(
+                        "Thành viên 'Trần Minh Quân' đóng góp 56/128 commit (44%), phụ trách "
+                        "kiến trúc REST API, tích hợp thanh toán VNPay và tầng ORM."
+                    ),
                 ),
                 GraphNode(
                     id="author:thuylinh-vku",
@@ -54,6 +59,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Frontend Engineer",
                     size=44,
                     status="healthy",
+                    description=(
+                        "Thành viên 'Nguyễn Thùy Linh' đóng góp 44/128 commit (34%), xây dựng "
+                        "giao diện Dashboard học vụ, luồng Checkout và thư viện UI Component."
+                    ),
                 ),
                 GraphNode(
                     id="author:hoangnam-vku",
@@ -62,6 +71,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Auth / QA & Docs",
                     size=28,
                     status="probe",
+                    description=(
+                        "Thành viên 'Lê Hoàng Nam' đóng góp 28/128 commit (22%), đảm nhiệm "
+                        "xác thực JWT/RBAC, kiểm thử tự động và tài liệu kiến trúc hệ thống."
+                    ),
                 ),
                 GraphNode(
                     id="mod:backend/api",
@@ -70,6 +83,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1420,
                     churn=26,
                     status="healthy",
+                    description=(
+                        "Tầng định tuyến REST API chính xử lý khóa học, lịch học và hồ sơ "
+                        "sinh viên với 26 lượt chạm từ cả Backend và Frontend. Phân tích "
+                        "trực tiếp từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/api/courses.py",
+                        "backend/api/enrollments.py",
+                        "backend/api/dependencies.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:backend/payment",
@@ -78,6 +101,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1980,
                     churn=19,
                     status="risk",
+                    description=(
+                        "Module tích hợp cổng thanh toán học phí VNPay Sandbox và đối soát "
+                        "webhook IPN (1.980 dòng thay đổi, tập trung 94% vào 1 thành viên). "
+                        "Phân tích trực tiếp từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/payment/vnpay_gateway.py",
+                        "backend/payment/webhook_handler.py",
+                        "backend/payment/reconcile.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:backend/auth",
@@ -86,6 +119,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=860,
                     churn=15,
                     status="probe",
+                    description=(
+                        "Thành phần xác thực người dùng, cấp phát JWT Access/Refresh Token và "
+                        "kiểm tra phân quyền RBAC theo vai trò Giảng viên / Sinh viên. "
+                        "Phân tích trực tiếp từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/auth/jwt_handler.py",
+                        "backend/auth/rbac_guard.py",
+                        "backend/auth/password.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:backend/models",
@@ -94,6 +137,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=640,
                     churn=12,
                     status="healthy",
+                    description=(
+                        "Định nghĩa lược đồ cơ sở dữ liệu SQLAlchemy và Pydantic DTO cho sinh "
+                        "viên, học phần và hóa đơn học phí. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/models/student.py",
+                        "backend/models/course.py",
+                        "backend/models/invoice.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:backend/tests",
@@ -102,6 +155,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=780,
                     churn=14,
                     status="healthy",
+                    description=(
+                        "Bộ kiểm thử tự động Pytest cho các endpoint đăng ký tín chỉ và xác thực "
+                        "JWT, có sự phối hợp giữa 2 thành viên. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/tests/test_courses_api.py",
+                        "backend/tests/test_auth_rbac.py",
+                        "backend/tests/conftest.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:frontend/dashboard",
@@ -110,6 +173,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1540,
                     churn=24,
                     status="healthy",
+                    description=(
+                        "Không gian bảng điều khiển tiến độ học tập, thống kê tín chỉ và lịch "
+                        "thi dành cho sinh viên VKU. Phân tích trực tiếp từ mã nguồn, không "
+                        "dựa vào README."
+                    ),
+                    key_files=[
+                        "frontend/dashboard/StudentDashboard.tsx",
+                        "frontend/dashboard/CreditProgressChart.tsx",
+                        "frontend/dashboard/ScheduleView.tsx",
+                    ],
                 ),
                 GraphNode(
                     id="mod:frontend/checkout",
@@ -118,6 +191,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1120,
                     churn=17,
                     status="probe",
+                    description=(
+                        "Giao diện thanh toán học phí trực tuyến, tạo mã QR và polling trạng "
+                        "thái giao dịch bất đồng bộ. Phân tích trực tiếp từ mã nguồn, không "
+                        "dựa vào README."
+                    ),
+                    key_files=[
+                        "frontend/checkout/PaymentFlow.tsx",
+                        "frontend/checkout/TransactionPoller.ts",
+                        "frontend/checkout/ReceiptModal.tsx",
+                    ],
                 ),
                 GraphNode(
                     id="mod:frontend/components",
@@ -126,6 +209,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=920,
                     churn=20,
                     status="healthy",
+                    description=(
+                        "Thư viện thành phần giao diện dùng chung (Navbar, Modal, DataTable, "
+                        "StatusBadge) phục vụ toàn bộ ứng dụng React. Phân tích trực tiếp từ "
+                        "mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "frontend/components/DataTable.tsx",
+                        "frontend/components/AppNavbar.tsx",
+                        "frontend/components/StatusBadge.tsx",
+                    ],
                 ),
                 GraphNode(
                     id="mod:frontend/hooks",
@@ -134,6 +227,15 @@ def get_sample_audits() -> list[AuditReport]:
                     size=510,
                     churn=11,
                     status="healthy",
+                    description=(
+                        "Tập hợp Custom React Hooks quản lý phiên đăng nhập, gọi API có cache "
+                        "và đồng bộ thông báo thời gian thực. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "frontend/hooks/useAuthSession.ts",
+                        "frontend/hooks/useCourseQuery.ts",
+                    ],
                 ),
                 GraphNode(
                     id="mod:docs/architecture",
@@ -142,6 +244,14 @@ def get_sample_audits() -> list[AuditReport]:
                     size=480,
                     churn=9,
                     status="healthy",
+                    description=(
+                        "Tài liệu thiết kế kiến trúc hệ thống, lược đồ ERD và đặc tả luồng "
+                        "tích hợp thanh toán học phí. Phân tích trực tiếp từ lịch sử Git diff."
+                    ),
+                    key_files=[
+                        "docs/architecture/system-context.md",
+                        "docs/architecture/erd-schema.md",
+                    ],
                 ),
                 GraphNode(
                     id="mod:docs/testing",
@@ -150,6 +260,14 @@ def get_sample_audits() -> list[AuditReport]:
                     size=410,
                     churn=8,
                     status="healthy",
+                    description=(
+                        "Kịch bản kiểm thử chấp nhận (UAT) và báo cáo kiểm thử tích hợp qua "
+                        "các Sprint đồ án. Phân tích trực tiếp từ lịch sử Git diff."
+                    ),
+                    key_files=[
+                        "docs/testing/uat-test-cases.md",
+                        "docs/testing/sprint2-qa-report.md",
+                    ],
                 ),
             ],
             edges=[
@@ -255,6 +373,45 @@ def get_sample_audits() -> list[AuditReport]:
                 evidence_ref="PR#24",
             ),
         ],
+        commit_highlights=[
+            CommitHighlight(
+                ref="commit:a4f91c2",
+                url="https://github.com/vku-capstone/vku-edutrack-capstone/commit/a4f91c2",
+                author="minhquan-vku",
+                date="2026-11-14T16:40:00Z",
+                title="feat(payment): integrate VNPay sandbox gateway and IPN webhook",
+                diff_summary="+1420 / -110 dòng trên 4 tệp mã nguồn thật",
+                files_changed=[
+                    "backend/payment/vnpay_gateway.py",
+                    "backend/payment/webhook_handler.py",
+                    "backend/payment/reconcile.py",
+                ],
+            ),
+            CommitHighlight(
+                ref="PR#19",
+                url="https://github.com/vku-capstone/vku-edutrack-capstone/pull/19",
+                author="hoangnam-vku",
+                date="2026-11-10T09:15:00Z",
+                title="feat(auth): implement JWT refresh rotation and RBAC middleware",
+                diff_summary="+540 / -65 dòng trên 3 tệp mã nguồn thật",
+                files_changed=[
+                    "backend/auth/jwt_handler.py",
+                    "backend/auth/rbac_guard.py",
+                ],
+            ),
+            CommitHighlight(
+                ref="PR#24",
+                url="https://github.com/vku-capstone/vku-edutrack-capstone/pull/24",
+                author="thuylinh-vku",
+                date="2026-11-16T14:20:00Z",
+                title="feat(checkout): async transaction status polling and QR receipt modal",
+                diff_summary="+680 / -90 dòng trên 3 tệp mã nguồn thật",
+                files_changed=[
+                    "frontend/checkout/PaymentFlow.tsx",
+                    "frontend/checkout/TransactionPoller.ts",
+                ],
+            ),
+        ],
     )
 
     solo_audit = AuditReport(
@@ -292,6 +449,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Human PM / Full-Stack Architect",
                     size=64,
                     status="healthy",
+                    description=(
+                        "Thành viên 'Đinh Nhật Cảm (NhatCam2006)' đóng góp 64/64 commit (100%), "
+                        "thiết kế kiến trúc 3 tầng, điều phối AI Swarm và kiểm duyệt toàn bộ PR."
+                    ),
                 ),
                 GraphNode(
                     id="mod:backend/core",
@@ -300,6 +461,17 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1280,
                     churn=18,
                     status="probe",
+                    description=(
+                        "Lõi phân tích Git telemetry, bộ lọc chống nhiễu lockfile/minified, "
+                        "thuật toán gom tối đa 40 cụm module 2 cấp và suy luận ngữ cảnh dự án. "
+                        "Phân tích trực tiếp từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/app/core/module_clusterer.py",
+                        "backend/app/core/diff_filter.py",
+                        "backend/app/core/github_client.py",
+                        "backend/app/core/schemas.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:backend/db",
@@ -308,6 +480,15 @@ def get_sample_audits() -> list[AuditReport]:
                     size=540,
                     churn=9,
                     status="healthy",
+                    description=(
+                        "Tầng lưu trữ SQLite thuần với cơ chế tự động khởi tạo schema và nạp "
+                        "dữ liệu mẫu idempotent khi khởi động. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/app/db/sqlite_store.py",
+                        "backend/app/seed/sample_audits.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:backend/tests",
@@ -316,6 +497,17 @@ def get_sample_audits() -> list[AuditReport]:
                     size=860,
                     churn=14,
                     status="healthy",
+                    description=(
+                        "Hệ thống kiểm thử tự động Pytest kiểm chứng bộ lọc diff, gom cụm 3D, "
+                        "REST API endpoints và máy trạng thái MCP 6 công cụ. Phân tích trực tiếp "
+                        "từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "backend/tests/test_diff_filter_and_clusterer.py",
+                        "backend/tests/test_mcp_harness.py",
+                        "backend/tests/test_preview_api.py",
+                        "backend/tests/test_schemas_and_store.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:frontend/components",
@@ -324,6 +516,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1350,
                     churn=16,
                     status="probe",
+                    description=(
+                        "Không gian 3D Contribution Force-Graph, thanh công cụ X-Ray / Focus "
+                        "Mode, biểu đồ 2D Commit Timeline và bảng Side Inspector tiếng Việt. "
+                        "Phân tích trực tiếp từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "frontend/src/components/Graph3DScene.tsx",
+                        "frontend/src/components/SideInspector.tsx",
+                        "frontend/src/components/TimelineStrip.tsx",
+                    ],
                 ),
                 GraphNode(
                     id="mod:frontend/styles",
@@ -332,6 +534,15 @@ def get_sample_audits() -> list[AuditReport]:
                     size=420,
                     churn=7,
                     status="healthy",
+                    description=(
+                        "Hệ thống thiết kế giao diện Interstellar Light-First (#F8FAFC), bảng "
+                        "màu ngữ nghĩa và bố cục cố định chống vỡ khung nhìn 3D. Phân tích "
+                        "trực tiếp từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "frontend/src/index.css",
+                        "frontend/src/App.tsx",
+                    ],
                 ),
                 GraphNode(
                     id="mod:docs/planning",
@@ -340,6 +551,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=980,
                     churn=12,
                     status="healthy",
+                    description=(
+                        "Hồ sơ quy hoạch kiến trúc, đặc tả giao thức 5 trạm kiểm toán AI và "
+                        "nhật ký quản trị Change Request (CR-001, CR-002). Phân tích trực tiếp "
+                        "từ lịch sử Git diff."
+                    ),
+                    key_files=[
+                        "docs/planning/PROJECT-CONTEXT.md",
+                        "docs/planning/ARCHITECTURAL-BLUEPRINT.md",
+                        "docs/planning/SPRINT-INDEX.md",
+                    ],
                 ),
             ],
             edges=[
@@ -408,6 +629,50 @@ def get_sample_audits() -> list[AuditReport]:
                 evidence_ref="commit:6d27bc6",
             ),
         ],
+        commit_highlights=[
+            CommitHighlight(
+                ref="PR#16",
+                url="https://github.com/NhatCam2006/vku-sprintguard/pull/16",
+                author="NhatCam2006",
+                date="2026-11-23T06:30:00Z",
+                title=(
+                    "feat(backend): FastAPI SQLite audit store, diff filter & 40-module clusterer"
+                ),
+                diff_summary="+1280 / -45 dòng trên 6 tệp mã nguồn thật",
+                files_changed=[
+                    "backend/app/core/module_clusterer.py",
+                    "backend/app/core/diff_filter.py",
+                    "backend/app/core/github_client.py",
+                    "backend/app/db/sqlite_store.py",
+                ],
+            ),
+            CommitHighlight(
+                ref="commit:6d27bc6",
+                url="https://github.com/NhatCam2006/vku-sprintguard/commit/6d27bc6",
+                author="NhatCam2006",
+                date="2026-11-23T08:15:00Z",
+                title="feat(frontend): Interstellar 3D force-graph, X-Ray filter & camera fly-to",
+                diff_summary="+1350 / -80 dòng trên 4 tệp mã nguồn thật",
+                files_changed=[
+                    "frontend/src/components/Graph3DScene.tsx",
+                    "frontend/src/components/SideInspector.tsx",
+                    "frontend/src/components/TimelineStrip.tsx",
+                ],
+            ),
+            CommitHighlight(
+                ref="PR#25",
+                url="https://github.com/NhatCam2006/vku-sprintguard/pull/25",
+                author="NhatCam2006",
+                date="2026-11-24T10:00:00Z",
+                title="feat(mcp): stateful 6-tool FastMCP harness with HITL publish gate",
+                diff_summary="+920 / -30 dòng trên 3 tệp mã nguồn thật",
+                files_changed=[
+                    "mcp_server/harness.py",
+                    "mcp_server/server.py",
+                    "backend/tests/test_mcp_harness.py",
+                ],
+            ),
+        ],
     )
 
     open_source_audit = AuditReport(
@@ -443,6 +708,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Lead Maintainer",
                     size=60,
                     status="healthy",
+                    description=(
+                        "Thành viên 'Alex Nguyen (Core Maintainer)' đóng góp 60/142 commit (42%), "
+                        "duy trì tầng giao vận lõi src/transport và phê duyệt phát hành."
+                    ),
                 ),
                 GraphNode(
                     id="author:baotran-oss",
@@ -451,6 +720,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Core Contributor",
                     size=38,
                     status="healthy",
+                    description=(
+                        "Thành viên 'Bảo Trân' đóng góp 38/142 commit (27%), phát triển bộ "
+                        "sinh lược đồ JSON Schema tự động và bộ kiểm thử tích hợp."
+                    ),
                 ),
                 GraphNode(
                     id="author:david-dev",
@@ -459,6 +732,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Adapter Contributor",
                     size=25,
                     status="healthy",
+                    description=(
+                        "Thành viên 'David Pham' đóng góp 25/142 commit (18%), xây dựng "
+                        "middleware bảo mật API Token và kiểm thử xác thực đa client."
+                    ),
                 ),
                 GraphNode(
                     id="author:mai-docs",
@@ -467,6 +744,10 @@ def get_sample_audits() -> list[AuditReport]:
                     role="Docs & Examples",
                     size=19,
                     status="healthy",
+                    description=(
+                        "Thành viên 'Mai Lê' đóng góp 19/142 commit (13%), biên soạn ứng dụng "
+                        "mẫu Quickstart và hướng dẫn tích hợp FastMCP."
+                    ),
                 ),
                 GraphNode(
                     id="mod:src/transport",
@@ -475,6 +756,16 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1640,
                     churn=28,
                     status="probe",
+                    description=(
+                        "Tầng giao vận lõi quản lý luồng kết nối SSE và Stdio giữa FastAPI và "
+                        "MCP Client, xử lý đóng kết nối an toàn (graceful shutdown). Phân tích "
+                        "trực tiếp từ mã nguồn, không dựa vào README."
+                    ),
+                    key_files=[
+                        "src/transport/sse_stream.py",
+                        "src/transport/stdio_runner.py",
+                        "src/transport/session_pool.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:src/schema_gen",
@@ -483,6 +774,15 @@ def get_sample_audits() -> list[AuditReport]:
                     size=1120,
                     churn=21,
                     status="healthy",
+                    description=(
+                        "Bộ chuyển đổi tự động từ kiểu dữ liệu Pydantic v2 sang đặc tả JSON "
+                        "Schema tương thích công cụ MCP. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "src/schema_gen/pydantic_inspector.py",
+                        "src/schema_gen/tool_manifest.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:src/auth_guard",
@@ -491,6 +791,15 @@ def get_sample_audits() -> list[AuditReport]:
                     size=890,
                     churn=16,
                     status="probe",
+                    description=(
+                        "Middleware kiểm tra Header Token, xoay vòng khóa API và chống tấn công "
+                        "timing attack khi xác thực MCP request. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "src/auth_guard/token_verifier.py",
+                        "src/auth_guard/key_rotation.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:tests/integration",
@@ -499,6 +808,15 @@ def get_sample_audits() -> list[AuditReport]:
                     size=940,
                     churn=18,
                     status="healthy",
+                    description=(
+                        "Bộ kiểm thử tích hợp toàn trình kiểm chứng luồng gọi công cụ MCP qua "
+                        "SSE và xác thực token đa phiên. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "tests/integration/test_sse_lifecycle.py",
+                        "tests/integration/test_auth_middleware.py",
+                    ],
                 ),
                 GraphNode(
                     id="mod:examples/quickstart",
@@ -507,6 +825,15 @@ def get_sample_audits() -> list[AuditReport]:
                     size=520,
                     churn=11,
                     status="healthy",
+                    description=(
+                        "Mã nguồn ví dụ khởi tạo nhanh máy chủ FastAPI kết nối MCP trong 30 "
+                        "dòng lệnh dành cho cộng đồng. Phân tích trực tiếp từ mã nguồn, "
+                        "không dựa vào README."
+                    ),
+                    key_files=[
+                        "examples/quickstart/minimal_server.py",
+                        "examples/quickstart/client_demo.py",
+                    ],
                 ),
             ],
             edges=[
@@ -572,6 +899,33 @@ def get_sample_audits() -> list[AuditReport]:
                     "gian thay vì toán tử so sánh chuỗi thông thường?"
                 ),
                 evidence_ref="PR#112",
+            ),
+        ],
+        commit_highlights=[
+            CommitHighlight(
+                ref="PR#108",
+                url="https://github.com/oss-vietnam/fastapi-mcp-bridge/pull/108",
+                author="alex-maintainer",
+                date="2026-11-15T11:20:00Z",
+                title="refactor(transport): unified SSE and Stdio duplex session pool",
+                diff_summary="+740 / -210 dòng trên 3 tệp mã nguồn thật",
+                files_changed=[
+                    "src/transport/sse_stream.py",
+                    "src/transport/stdio_runner.py",
+                    "src/transport/session_pool.py",
+                ],
+            ),
+            CommitHighlight(
+                ref="PR#112",
+                url="https://github.com/oss-vietnam/fastapi-mcp-bridge/pull/112",
+                author="david-dev",
+                date="2026-11-18T15:05:00Z",
+                title="feat(auth): constant-time header token rotation guard",
+                diff_summary="+410 / -55 dòng trên 2 tệp mã nguồn thật",
+                files_changed=[
+                    "src/auth_guard/token_verifier.py",
+                    "src/auth_guard/key_rotation.py",
+                ],
             ),
         ],
     )

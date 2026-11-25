@@ -100,6 +100,8 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
         size: 16,
         churn: 1420,
         status: 'healthy',
+        description:
+          'Phụ trách chính kiến trúc xác thực JWT, luồng làm mới token và tích hợp API bản đồ phía backend.',
       },
       {
         id: 'author:linh',
@@ -109,6 +111,8 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
         size: 13,
         churn: 980,
         status: 'probe',
+        description:
+          'Xây dựng giao diện bản đồ điều hướng khuôn viên, quản lý trạng thái phiên người dùng và tối ưu hiển thị.',
       },
       {
         id: 'author:khoa',
@@ -118,6 +122,8 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
         size: 8,
         churn: 240,
         status: 'healthy',
+        description:
+          'Viết kịch bản kiểm thử tự động, chuẩn hóa dữ liệu địa điểm mẫu và cập nhật tài liệu vận hành sprint.',
       },
       {
         id: 'mod:backend/auth',
@@ -127,6 +133,13 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
         size: 15,
         churn: 1120,
         status: 'risk',
+        description:
+          'Cụm xử lý đăng nhập, cấp phát và làm mới JWT token cùng middleware bảo vệ các endpoint nội bộ.',
+        key_files: [
+          'backend/auth/jwt_service.py',
+          'backend/auth/token_refresh.py',
+          'backend/auth/middleware.py',
+        ],
       },
       {
         id: 'mod:frontend/map',
@@ -136,6 +149,13 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
         size: 12,
         churn: 740,
         status: 'probe',
+        description:
+          'Thành phần bản đồ tương tác hiển thị tòa nhà VKU, dẫn đường thời gian thực và đồng bộ trạng thái phiên.',
+        key_files: [
+          'frontend/map/CampusMapView.tsx',
+          'frontend/map/useRouteState.ts',
+          'frontend/map/sessionSync.ts',
+        ],
       },
       {
         id: 'mod:docs/tests',
@@ -145,6 +165,12 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
         size: 7,
         churn: 210,
         status: 'healthy',
+        description:
+          'Bộ kiểm thử tích hợp luồng bản đồ, dữ liệu seed kiểm thử và ghi chú nghiệm thu sprint.',
+        key_files: [
+          'docs/tests/auth_flow.spec.ts',
+          'docs/tests/campus_seed.json',
+        ],
       },
     ],
     edges: [
@@ -169,7 +195,7 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
       title: 'Single-Author Bus Factor on Auth Core',
       description:
         '100% of commits in backend/auth were authored by Minh Nguyen with a late Week 15 refactor.',
-      evidence_ref: '2026-W15 · backend/auth (14 commits)',
+      evidence_ref: 'commit:a1b2c3d',
       critic_note:
         'Single ownership is acceptable if peer-reviewed; verify whether Linh or Khoa reviewed the token flow.',
     },
@@ -180,7 +206,7 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
       title: 'High Late-Sprint Churn in Map View',
       description:
         'frontend/map saw +610/-290 lines changed within 48 hours before demo freeze.',
-      evidence_ref: '2026-W15 · frontend/map',
+      evidence_ref: 'PR#14',
       critic_note:
         'Could be legitimate UI polish; probe how state updates and edge cases were validated.',
     },
@@ -191,14 +217,54 @@ export const FALLBACK_AUDIT_REPORT: AuditReport = {
       author_name: 'Minh Nguyen',
       question:
         'Walk through the Week 15 auth token refresh rewrite — what edge case triggered the 620-line deletion?',
-      evidence_ref: '2026-W15 · backend/auth',
+      evidence_ref: 'commit:a1b2c3d',
     },
     {
       author_id: 'author:linh',
       author_name: 'Linh Tran',
       question:
         'How does frontend/map synchronize state with backend/auth when a session expires mid-navigation?',
-      evidence_ref: '2026-W15 · frontend/map',
+      evidence_ref: 'PR#14',
+    },
+  ],
+  commit_highlights: [
+    {
+      ref: 'commit:a1b2c3d',
+      url: 'https://github.com/NhatCam2006/vku-sprintguard/commit/a1b2c3d',
+      author: 'Minh Nguyen',
+      date: '2026-04-11',
+      title: 'refactor(auth): rewrite JWT refresh rotation and revoke stale sessions',
+      diff_summary:
+        'Thay đổi lớn ở tuần W15 (+480/-620 dòng), hợp nhất kiểm tra token hết hạn vào middleware dùng chung.',
+      files_changed: [
+        'backend/auth/jwt_service.py',
+        'backend/auth/token_refresh.py',
+        'backend/auth/middleware.py',
+      ],
+    },
+    {
+      ref: 'PR#14',
+      url: 'https://github.com/NhatCam2006/vku-sprintguard/pull/14',
+      author: 'Linh Tran',
+      date: '2026-04-12',
+      title: 'feat(map): sync campus navigation route state on session refresh',
+      diff_summary:
+        'Bổ sung cơ chế giữ nguyên tuyến đường đang xem khi token hết hạn giữa phiên điều hướng (+610/-290 dòng).',
+      files_changed: [
+        'frontend/map/CampusMapView.tsx',
+        'frontend/map/useRouteState.ts',
+        'frontend/map/sessionSync.ts',
+      ],
+    },
+    {
+      ref: 'commit:7e8f901',
+      url: 'https://github.com/NhatCam2006/vku-sprintguard/commit/7e8f901',
+      author: 'Khoa Le',
+      date: '2026-04-10',
+      title: 'test(e2e): add auth token expiry regression suite for campus map',
+      diff_summary:
+        'Thêm bộ kiểm thử hồi quy xác minh luồng hết phiên và dữ liệu seed cho 12 tòa nhà mẫu.',
+      files_changed: ['docs/tests/auth_flow.spec.ts', 'docs/tests/campus_seed.json'],
     },
   ],
 };

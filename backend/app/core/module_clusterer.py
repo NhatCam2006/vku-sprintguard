@@ -10,6 +10,7 @@ from app.core.schemas import (
     AuditReport,
     AuditSignal,
     AuditSummary,
+    CommitHighlight,
     Graph3D,
     GraphEdge,
     GraphNode,
@@ -20,6 +21,7 @@ from app.core.schemas import (
 )
 
 MAX_MODULES = 40
+MAX_COMMIT_HIGHLIGHTS = 8
 
 
 def map_path_to_module(path: str) -> str:
@@ -105,6 +107,7 @@ def build_preview_audit(
     module_touches: dict[str, int] = defaultdict(int)
     module_lines: dict[str, int] = defaultdict(int)
     module_author_touches: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+    module_file_lines: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
     module_max_single_commit_delta: dict[str, tuple[int, str]] = {}
 
     week_commits: dict[str, int] = defaultdict(int)
@@ -112,10 +115,13 @@ def build_preview_audit(
     week_deletions: dict[str, int] = defaultdict(int)
     week_top_sha: dict[str, tuple[int, str]] = {}
 
+    commit_highlights: list[CommitHighlight] = []
+    clean_repo_url = repo_url.rstrip("/")
     first_valid_sha = ""
 
     for commit in commits:
-        sha = str(commit.get("sha") or "")[:7]
+        full_sha = str(commit.get("sha") or "").strip()
+        sha = full_sha[:7]
         if sha and not first_valid_sha:
             first_valid_sha = sha
 
@@ -146,6 +152,7 @@ def build_preview_audit(
 
         raw_files = commit.get("files") or []
         clean_files = filter_changed_files(raw_files)
+        clean_paths: list[str] = []
 
         commit_add = 0
         commit_del = 0
@@ -153,7 +160,7 @@ def build_preview_audit(
 
         if clean_files:
             for f in clean_files:
-                path = str(f.get("filename") or f.get("path") or "")
+                path = str(f.get("filename") or f.get("path") or "").strip()
                 mod = map_path_to_module(path)
                 adds = int(f.get("additions") or 0)
                 dels = int(f.get("deletions") or 0)
@@ -164,6 +171,9 @@ def build_preview_audit(
                 module_touches[mod] += 1
                 module_lines[mod] += max(1, delta)
                 module_author_touches[mod][author_login] += 1
+                if path:
+                    module_file_lines[mod][path] += max(1, delta)
+                    clean_paths.append(path)
                 per_mod_commit_delta[mod] += delta
         elif raw_files:
             # All changed files in this commit were filtered lockfiles/build artifacts
@@ -181,6 +191,32 @@ def build_preview_audit(
             module_author_touches[mod][author_login] += 1
             per_mod_commit_delta[mod] += delta
 
+        if (
+            sha
+            and len(commit_highlights) < MAX_COMMIT_HIGHLIGHTS
+            and (clean_files or not raw_files)
+        ):
+            raw_msg = str(
+                commit.get("message") or ((commit.get("commit") or {}).get("message")) or ""
+            ).strip()
+            first_line = (
+                raw_msg.splitlines()[0].strip() if raw_msg else f"Cập nhật mã nguồn ({sha})"
+            )
+            commit_highlights.append(
+                CommitHighlight(
+                    ref=f"commit:{sha}",
+                    url=f"{clean_repo_url}/commit/{full_sha or sha}",
+                    author=author_login,
+                    date=date_str,
+                    title=first_line,
+                    diff_summary=(
+                        f"+{commit_add} / -{commit_del} dòng trên "
+                        f"{len(clean_files)} tệp mã nguồn thật"
+                    ),
+                    files_changed=clean_paths[:4],
+                )
+            )
+
         for mod, mod_delta in per_mod_commit_delta.items():
             prev_max, _ = module_max_single_commit_delta.get(mod, (0, ""))
             if mod_delta >= prev_max:
@@ -192,6 +228,31 @@ def build_preview_audit(
         prev_w_delta, _ = week_top_sha.get(week_key, (-1, ""))
         if commit_total_delta > prev_w_delta and sha:
             week_top_sha[week_key] = (commit_total_delta, sha)
+
+    if len(commit_highlights) < MAX_COMMIT_HIGHLIGHTS and prs:
+        for pr in prs:
+            if len(commit_highlights) >= MAX_COMMIT_HIGHLIGHTS:
+                break
+            num = pr.get("number")
+            if not num:
+                continue
+            pr_user = str(
+                pr.get("user_login") or (pr.get("user") or {}).get("login") or owner
+            ).strip()
+            created_at = str(pr.get("created_at") or "")
+            pr_title = str(pr.get("title") or f"Pull Request #{num}").strip()
+            state = str(pr.get("state") or "open").strip()
+            commit_highlights.append(
+                CommitHighlight(
+                    ref=f"PR#{num}",
+                    url=f"{clean_repo_url}/pull/{num}",
+                    author=pr_user,
+                    date=created_at,
+                    title=pr_title,
+                    diff_summary=f"Pull Request #{num} ({state})",
+                    files_changed=[],
+                )
+            )
 
     # Cap at 40 largest modules; merge overflow into "other"
     sorted_modules = sorted(
@@ -208,6 +269,7 @@ def build_preview_audit(
         merged_touches: dict[str, int] = defaultdict(int)
         merged_lines: dict[str, int] = defaultdict(int)
         merged_author_touches: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
+        merged_file_lines: dict[str, dict[str, int]] = defaultdict(lambda: defaultdict(int))
         merged_max_delta: dict[str, tuple[int, str]] = {}
 
         for mod in sorted_modules:
@@ -216,6 +278,8 @@ def build_preview_audit(
             merged_lines[target_mod] += module_lines[mod]
             for login, cnt in module_author_touches[mod].items():
                 merged_author_touches[target_mod][login] += cnt
+            for path, f_lines in module_file_lines[mod].items():
+                merged_file_lines[target_mod][path] += f_lines
             mod_max, mod_sha = module_max_single_commit_delta.get(mod, (0, ""))
             cur_max, _ = merged_max_delta.get(target_mod, (0, ""))
             if mod_max >= cur_max:
@@ -224,6 +288,7 @@ def build_preview_audit(
         module_touches = merged_touches
         module_lines = merged_lines
         module_author_touches = merged_author_touches
+        module_file_lines = merged_file_lines
         module_max_single_commit_delta = merged_max_delta
 
     total_commits = sum(author_commits.values())
@@ -235,14 +300,30 @@ def build_preview_audit(
     signals: list[AuditSignal] = []
 
     for login, commit_count in sorted(author_commits.items(), key=lambda item: (-item[1], item[0])):
+        label = author_labels.get(login, login)
+        share = commit_count / max(1, total_commits)
+        author_mods = sorted(
+            (
+                (mod, touches_by_author[login])
+                for mod, touches_by_author in module_author_touches.items()
+                if touches_by_author.get(login, 0) > 0
+            ),
+            key=lambda item: (-item[1], item[0]),
+        )
+        top_mods = ", ".join(m for m, _ in author_mods[:3]) if author_mods else "root"
+        author_desc = (
+            f"Thành viên '{label}' đóng góp {commit_count}/{total_commits} commit "
+            f"({share:.0%}), tập trung vào {top_mods}."
+        )
         nodes.append(
             GraphNode(
                 id=f"author:{login}",
                 type="author",
-                label=author_labels.get(login, login),
+                label=label,
                 role="Contributor",
                 size=max(1, commit_count),
                 status="healthy",
+                description=author_desc,
             )
         )
 
@@ -261,6 +342,17 @@ def build_preview_audit(
         top_share = top_author_touches / max(1, touches)
         max_single_delta, max_sha = module_max_single_commit_delta.get(mod, (0, first_valid_sha))
         evidence_sha = max_sha or first_valid_sha or "HEAD"
+
+        file_map = module_file_lines[mod]
+        all_files = [p for p, _ in sorted(file_map.items(), key=lambda item: (-item[1], item[0]))]
+        key_files = all_files[:6]
+        sample = ", ".join(key_files[:3]) if key_files else mod
+        mod_desc = (
+            f"Thành phần '{mod}' gồm {len(all_files)} tệp mã nguồn thật "
+            f"(tiêu biểu: {sample}), ghi nhận {touches} lượt chạm và {lines} dòng thay đổi "
+            f"từ Git diff (tác giả chính '{top_author}' chiếm {top_share:.0%}). "
+            "Phân tích trực tiếp từ mã nguồn, không dựa vào README."
+        )
 
         status: SignalLevel = "healthy"
         if max_single_delta >= 2500:
@@ -326,6 +418,8 @@ def build_preview_audit(
                 size=max(1, lines),
                 churn=touches,
                 status=status,
+                description=mod_desc,
+                key_files=key_files,
             )
         )
 
@@ -442,4 +536,5 @@ def build_preview_audit(
         timeline_2d=timeline_2d,
         signals=signals,
         interview_questions=[],
+        commit_highlights=commit_highlights,
     )

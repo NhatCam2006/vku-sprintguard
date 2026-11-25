@@ -75,6 +75,20 @@ def test_preview_endpoint_happy_path(monkeypatch: pytest.MonkeyPatch) -> None:
     node_ids = {n["id"] for n in data["graph_3d"]["nodes"]}
     assert "author:NhatCam2006" in node_ids
     assert "mod:backend/app" in node_ids
+    nodes_by_id = {n["id"]: n for n in data["graph_3d"]["nodes"]}
+    assert nodes_by_id["mod:backend/app"]["key_files"] == ["backend/app/main.py"]
+    assert "Thành phần 'backend/app'" in nodes_by_id["mod:backend/app"]["description"]
+    assert "Thành viên" in nodes_by_id["author:NhatCam2006"]["description"]
+    assert len(data["commit_highlights"]) == 2
+    assert data["commit_highlights"][0]["ref"] == "commit:6d27bc6"
+    assert data["commit_highlights"][0]["url"] == (
+        "https://github.com/NhatCam2006/vku-sprintguard/commit/6d27bc633c14"
+    )
+    assert data["commit_highlights"][0]["files_changed"] == ["backend/app/main.py"]
+    assert data["commit_highlights"][1]["ref"] == "PR#21"
+    assert data["commit_highlights"][1]["url"] == (
+        "https://github.com/NhatCam2006/vku-sprintguard/pull/21"
+    )
 
 
 def test_preview_endpoint_error_mappings(monkeypatch: pytest.MonkeyPatch) -> None:

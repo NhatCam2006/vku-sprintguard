@@ -46,14 +46,16 @@ def submit_context(
     repo_type: RepoContext,
     context_reasoning: str,
     member_roles: dict[str, str] | None = None,
+    node_descriptions: dict[str, str] | None = None,
 ) -> dict[str, Any]:
-    """Station 2: Lock repository context (solo/student_team/open_source) and member roles."""
+    """Station 2: Lock repository context, member roles, and optional node descriptions."""
     try:
         return harness.submit_context(
             session_id=session_id,
             repo_type=repo_type,
             context_reasoning=context_reasoning,
             member_roles=member_roles,
+            node_descriptions=node_descriptions,
         )
     except (HarnessGuardError, ValueError) as exc:
         return _error_response(exc, session_id=session_id)

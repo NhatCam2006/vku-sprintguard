@@ -237,6 +237,7 @@ class SprintGuardHarness:
         repo_type: RepoContext,
         context_reasoning: str,
         member_roles: dict[str, str] | None = None,
+        node_descriptions: dict[str, str] | None = None,
     ) -> dict[str, Any]:
         session = self.get_session(session_id)
         self._require_state(session, {SessionState.COLLECTED, SessionState.CONTEXT_SET})
@@ -259,6 +260,28 @@ class SprintGuardHarness:
                     if candidate in normalized_roles:
                         node.role = normalized_roles[candidate]
                         break
+
+        if node_descriptions:
+            normalized_descs = {
+                k.strip(): v.strip()
+                for k, v in node_descriptions.items()
+                if k and k.strip() and v and v.strip()
+            }
+            lower_descs = {k.lower(): v for k, v in normalized_descs.items()}
+            for node in session.report.graph_3d.nodes:
+                stripped_id = (
+                    node.id.removeprefix("author:")
+                    if node.type == "author"
+                    else node.id.removeprefix("mod:")
+                )
+                if node.id in normalized_descs:
+                    node.description = normalized_descs[node.id]
+                elif node.id.lower() in lower_descs:
+                    node.description = lower_descs[node.id.lower()]
+                elif stripped_id.lower() in lower_descs:
+                    node.description = lower_descs[stripped_id.lower()]
+                elif node.label.lower() in lower_descs:
+                    node.description = lower_descs[node.label.lower()]
 
         session.state = SessionState.CONTEXT_SET
         authors = [
@@ -567,7 +590,9 @@ class SprintGuardHarness:
                     overview=final_summary.strip(),
                     human_notes=human_notes.strip(),
                 ),
+                "graph_3d": session.report.graph_3d,
                 "interview_questions": validated_questions,
+                "commit_highlights": list(session.report.commit_highlights),
             }
         )
 
