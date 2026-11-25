@@ -1,5 +1,5 @@
 import { type FormEvent, useState } from 'react';
-import { ArrowLeft, Loader2, Play } from 'lucide-react';
+import { ArrowLeft, Loader2, Play, ScanEye } from 'lucide-react';
 import type {
   AuditListItem,
   AuditMode,
@@ -24,6 +24,8 @@ interface TopBarProps {
   audits: AuditListItem[];
   health: HealthResponse | null;
   isPreviewLoading: boolean;
+  xRayMode: boolean;
+  onToggleXRay: () => void;
   onBackToLanding: () => void;
   onSelectAudit: (auditId: string) => void;
   onLaunchPreview: (repoUrl: string) => void;
@@ -34,6 +36,8 @@ export default function TopBar({
   audits,
   health,
   isPreviewLoading,
+  xRayMode,
+  onToggleXRay,
   onBackToLanding,
   onSelectAudit,
   onLaunchPreview,
@@ -129,15 +133,35 @@ export default function TopBar({
         </form>
       </div>
 
-      <div
-        data-testid="topbar-health-pill"
-        className="inline-flex items-center gap-2 border border-[#E4E4E7] bg-[#FAFAFA] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider tabular-nums shrink-0"
-      >
-        <span
-          className={`w-2 h-2 rounded-full ${isOnline ? 'bg-[#09090B]' : 'bg-[#DC2626]'}`}
-          aria-hidden="true"
-        />
-        <span>{isOnline ? `ONLINE · ${health.seeded_audits} SEEDED` : 'OFFLINE'}</span>
+      <div className="flex items-center gap-2 shrink-0">
+        <button
+          type="button"
+          data-testid="xray-toggle"
+          aria-pressed={xRayMode}
+          onClick={onToggleXRay}
+          className={`h-8 px-2.5 border text-[11px] font-semibold uppercase tracking-[0.12em] inline-flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 ${
+            xRayMode
+              ? 'bg-[#09090B] text-[#FFFFFF] border-[#09090B]'
+              : 'bg-[#FAFAFA] text-[#09090B] border-[#E4E4E7] hover:border-[#09090B]'
+          }`}
+        >
+          <ScanEye className="w-3.5 h-3.5 shrink-0" aria-hidden="true" />
+          <span>X-Ray</span>
+          {xRayMode && (
+            <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" aria-hidden="true" />
+          )}
+        </button>
+
+        <div
+          data-testid="topbar-health-pill"
+          className="inline-flex items-center gap-2 border border-[#E4E4E7] bg-[#FAFAFA] px-2.5 py-1 text-[11px] font-medium uppercase tracking-wider tabular-nums shrink-0"
+        >
+          <span
+            className={`w-2 h-2 rounded-full ${isOnline ? 'bg-[#09090B]' : 'bg-[#DC2626]'}`}
+            aria-hidden="true"
+          />
+          <span>{isOnline ? `ONLINE · ${health.seeded_audits} SEEDED` : 'OFFLINE'}</span>
+        </div>
       </div>
     </header>
   );

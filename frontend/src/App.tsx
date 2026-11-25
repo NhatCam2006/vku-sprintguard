@@ -27,6 +27,8 @@ export default function App() {
   const [inspectorTab, setInspectorTab] = useState<InspectorTab>('overview');
   const [selectedNodeId, setSelectedNodeId] = useState<string | null>(null);
   const [focusedAuthorId, setFocusedAuthorId] = useState<string | null>(null);
+  const [xRayMode, setXRayMode] = useState(false);
+  const [flyToRequest, setFlyToRequest] = useState<{ nodeId: string; seq: number } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -66,6 +68,8 @@ export default function App() {
     setActiveReport(report);
     setSelectedNodeId(null);
     setFocusedAuthorId(null);
+    setXRayMode(false);
+    setFlyToRequest(null);
     setInspectorTab('overview');
     setErrorMessage(null);
   }, []);
@@ -118,11 +122,14 @@ export default function App() {
   const handleSelectNodeId = useCallback((nodeId: string) => {
     setSelectedNodeId(nodeId);
     setInspectorTab('signals');
+    setFlyToRequest({ nodeId, seq: Date.now() });
   }, []);
 
   const handleResetView = useCallback(() => {
     setSelectedNodeId(null);
     setFocusedAuthorId(null);
+    setXRayMode(false);
+    setFlyToRequest(null);
   }, []);
 
   const selectedNode = useMemo(() => {
@@ -153,6 +160,8 @@ export default function App() {
         audits={audits}
         health={health}
         isPreviewLoading={isPreviewLoading}
+        xRayMode={xRayMode}
+        onToggleXRay={() => setXRayMode((prev) => !prev)}
         onBackToLanding={() => {
           setActiveReport(null);
           setErrorMessage(null);
@@ -177,6 +186,8 @@ export default function App() {
             graphData={activeReport.graph_3d}
             selectedNodeId={selectedNodeId}
             focusedAuthorId={focusedAuthorId}
+            xRayMode={xRayMode}
+            flyToRequest={flyToRequest}
             onSelectNode={handleSelectNode}
             onFocusAuthor={setFocusedAuthorId}
             onResetView={handleResetView}
