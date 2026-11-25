@@ -33,6 +33,14 @@ def test_sample_audits_validate_against_schema() -> None:
         assert len(sample.graph_3d.edges) > 0
         assert len(sample.timeline_2d) > 0
         assert len(sample.signals) > 0
+        assert len(sample.commit_highlights) > 0
+        for hl in sample.commit_highlights:
+            assert hl.url.startswith("https://github.com/")
+            assert hl.diff_summary != ""
+        for node in sample.graph_3d.nodes:
+            assert node.description.strip() != ""
+            if node.type == "module":
+                assert len(node.key_files) > 0
 
 
 def test_pydantic_rejects_invalid_enum_and_negative_metrics() -> None:

@@ -28,6 +28,8 @@ class GraphNode(BaseModel):
     size: int = Field(ge=0)
     churn: int | None = None
     status: SignalLevel = "healthy"
+    description: str = ""
+    key_files: list[str] = Field(default_factory=list)
 
 
 class GraphEdge(BaseModel):
@@ -66,6 +68,16 @@ class InterviewQuestion(BaseModel):
     evidence_ref: str
 
 
+class CommitHighlight(BaseModel):
+    ref: str
+    url: str
+    author: str
+    date: str = ""
+    title: str
+    diff_summary: str
+    files_changed: list[str] = Field(default_factory=list)
+
+
 class AuditReport(BaseModel):
     audit_id: str
     created_at: str
@@ -76,6 +88,7 @@ class AuditReport(BaseModel):
     timeline_2d: list[TimelineWeek]
     signals: list[AuditSignal] = Field(default_factory=list)
     interview_questions: list[InterviewQuestion] = Field(default_factory=list)
+    commit_highlights: list[CommitHighlight] = Field(default_factory=list)
 
 
 class AuditListItem(BaseModel):

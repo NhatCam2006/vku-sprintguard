@@ -68,6 +68,10 @@ def test_build_preview_audit_caps_40_modules_into_other() -> None:
     assert len(module_nodes) == 40
     module_ids = {n.id for n in module_nodes}
     assert "mod:other" in module_ids
+    other_node = next(n for n in module_nodes if n.id == "mod:other")
+    assert len(other_node.key_files) > 0
+    assert len(other_node.key_files) <= 6
+    assert "Thành phần 'other'" in other_node.description
 
 
 def test_build_preview_audit_status_heuristics_and_timeline_anomaly() -> None:
@@ -141,3 +145,19 @@ def test_build_preview_audit_status_heuristics_and_timeline_anomaly() -> None:
     anomalies = [w for w in report.timeline_2d if w.anomaly]
     assert len(anomalies) >= 1
     assert any(s.evidence_ref == "commit:deadbee" for s in report.signals)
+
+    # CR-002: Verify Vietnamese descriptions, key_files on modules, and commit_highlights
+    for node in report.graph_3d.nodes:
+        assert node.description != ""
+        if node.type == "module":
+            assert len(node.key_files) > 0
+            assert "Phân tích trực tiếp từ mã nguồn" in node.description
+        else:
+            assert "Thành viên" in node.description
+
+    assert "backend/core/service.py" in nodes_by_id["mod:backend/core"].key_files
+    assert len(report.commit_highlights) > 0
+    assert len(report.commit_highlights) <= 8
+    first_hl = report.commit_highlights[0]
+    assert first_hl.url.startswith("https://github.com/vku/team-project/commit/")
+    assert "tệp mã nguồn thật" in first_hl.diff_summary

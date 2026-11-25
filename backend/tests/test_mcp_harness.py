@@ -135,6 +135,12 @@ def test_full_six_tool_happy_path_and_publish_to_fastapi(
         repo_type="student_team",
         context_reasoning="Two-member student team splitting backend auth and frontend UI.",
         member_roles={"alice": "Backend Lead", "bob": "Frontend Dev"},
+        node_descriptions={
+            "mod:backend/auth": (
+                "Dịch vụ xác thực JWT và kiểm tra quyền truy cập do Alice phụ trách."
+            ),
+            "author:alice": "Trưởng nhóm Backend phụ trách tầng xác thực.",
+        },
     )
     assert ctx["state"] == SessionState.CONTEXT_SET.value
     roles_by_id = {a["id"]: a["role"] for a in ctx["authors"]}
@@ -224,6 +230,20 @@ def test_full_six_tool_happy_path_and_publish_to_fastapi(
     assert stored_json["mode"] == "deep_ai_audit"
     assert stored_json["summary"]["human_notes"] == (
         "Instructor confirmed Backend/Frontend division of labor."
+    )
+    stored_nodes = {n["id"]: n for n in stored_json["graph_3d"]["nodes"]}
+    assert stored_nodes["mod:backend/auth"]["description"] == (
+        "Dịch vụ xác thực JWT và kiểm tra quyền truy cập do Alice phụ trách."
+    )
+    assert stored_nodes["author:alice"]["description"] == (
+        "Trưởng nhóm Backend phụ trách tầng xác thực."
+    )
+    assert stored_nodes["mod:backend/auth"]["key_files"] == ["backend/auth/service.py"]
+    assert len(stored_json["commit_highlights"]) >= 2
+    assert stored_json["commit_highlights"][0]["ref"] == "commit:a1b2c3d"
+    assert stored_json["commit_highlights"][0]["url"] == (
+        "https://github.com/vku-team/sprintguard-demo/commit/"
+        "a1b2c3d4e5f60718293a4b5c6d7e8f9012345678"
     )
 
 
