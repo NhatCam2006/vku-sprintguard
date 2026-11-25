@@ -6,6 +6,7 @@ import { FALLBACK_AUDIT_REPORT } from '../api/client';
 import type { AuditListItem, AuditReport, HealthResponse } from '../types/audit';
 
 const zoomToFitMock = vi.fn();
+const cameraPositionMock = vi.fn();
 
 vi.mock('react-force-graph-3d', () => {
   interface MockProps {
@@ -18,6 +19,7 @@ vi.mock('react-force-graph-3d', () => {
   const MockForceGraph3D = forwardRef((props: MockProps, ref) => {
     useImperativeHandle(ref, () => ({
       zoomToFit: zoomToFitMock,
+      cameraPosition: cameraPositionMock,
     }));
 
     const firstNode = props.graphData.nodes[0];
@@ -158,6 +160,7 @@ function makeJsonResponse(body: unknown, status = 200): Response {
 describe('VKU SprintGuard Mission Control', () => {
   beforeEach(() => {
     zoomToFitMock.mockClear();
+    cameraPositionMock.mockClear();
   });
 
   afterEach(() => {
@@ -284,6 +287,77 @@ describe('VKU SprintGuard Mission Control', () => {
 
     fireEvent.click(screen.getByRole('tab', { name: /Interview Q&A/i }));
     expect(screen.getByText(/Live 3D Preview Mode/i)).toBeInTheDocument();
+  });
+
+  it('toggles X-Ray mode to dim healthy nodes and resets it with Reset Camera', async () => {
+    mockOnlineFetch();
+    render(<App />);
+
+    const studentCard = await screen.findByTestId('seeded-card-aud_sample_student_team');
+    fireEvent.click(within(studentCard).getByRole('button', { name: /Open 3D Mission Control/i }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('graph-wrapper')).toBeInTheDocument();
+    });
+
+    const xRayToggle = screen.getByTestId('xray-toggle');
+    expect(xRayToggle).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByTestId('graph-wrapper')).toHaveAttribute('data-xray-mode', 'false');
+    expect(screen.queryByTestId('xray-mode-indicator')).not.toBeInTheDocument();
+
+    fireEvent.click(xRayToggle);
+
+    expect(xRayToggle).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.getByTestId('graph-wrapper')).toHaveAttribute('data-xray-mode', 'true');
+    expect(screen.getByTestId('xray-mode-indicator')).toHaveTextContent('X-Ray Active');
+    expect(screen.getByTestId('mock-force-graph-3d')).toHaveAttribute(
+      'data-last-node-color',
+      'rgba(212,212,216,0.10)',
+    );
+
+    fireEvent.click(screen.getByRole('button', { name: /Reset Camera/i }));
+
+    expect(xRayToggle).toHaveAttribute('aria-pressed', 'false');
+    expect(screen.getByTestId('graph-wrapper')).toHaveAttribute('data-xray-mode', 'false');
+    expect(screen.queryByTestId('xray-mode-indicator')).not.toBeInTheDocument();
+    expect(zoomToFitMock).toHaveBeenCalledWith(400);
+  });
+
+  it('triggers Camera Fly-to on signal click and renders Critic Defense Review and PM HITL notes', async () => {
+    mockOnlineFetch();
+    render(<App />);
+
+    const studentCard = await screen.findByTestId('seeded-card-aud_sample_student_team');
+    fireEvent.click(within(studentCard).getByRole('button', { name: /Open 3D Mission Control/i }));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('graph-wrapper')).toBeInTheDocument();
+    });
+
+    const hitlCard = screen.getByTestId('pm-hitl-notes-card');
+    expect(hitlCard).toHaveTextContent('HITL Verified · Read-only');
+    expect(hitlCard).toHaveTextContent(FALLBACK_AUDIT_REPORT.audit_id);
+    expect(hitlCard).toHaveTextContent(FALLBACK_AUDIT_REPORT.summary.human_notes);
+
+    fireEvent.click(screen.getByRole('tab', { name: /Nodes & Signals/i }));
+    const signalButton = screen.getByTestId('signal-item-sig-01');
+    expect(signalButton).toHaveTextContent('Fly to Node');
+
+    const criticBox = screen.getByTestId('critic-note-sig-01');
+    expect(criticBox).toHaveTextContent('Critic Defense Review');
+    expect(criticBox).toHaveTextContent(FALLBACK_AUDIT_REPORT.signals[0].critic_note);
+
+    fireEvent.click(signalButton);
+
+    expect(screen.getByTestId('graph-wrapper')).toHaveAttribute(
+      'data-fly-target',
+      'mod:backend/auth',
+    );
+    expect(cameraPositionMock).toHaveBeenCalledWith(
+      { x: 0, y: 0, z: 85 },
+      { x: 0, y: 0, z: 0 },
+      800,
+    );
   });
 
   it('falls back cleanly when backend is offline via Explore Demo Workspace', async () => {

@@ -1,4 +1,12 @@
-import { AlertTriangle, FileText, Layers, MessageSquare, ShieldAlert } from 'lucide-react';
+import {
+  AlertTriangle,
+  Crosshair,
+  FileText,
+  Layers,
+  MessageSquare,
+  ShieldAlert,
+  ShieldCheck,
+} from 'lucide-react';
 import type { AuditReport, GraphNode, NodeStatus, RepoContext } from '../types/audit';
 
 export type InspectorTab = 'overview' | 'signals' | 'interview';
@@ -122,18 +130,26 @@ export default function SideInspector({
               <p className="text-xs text-[#09090B] leading-relaxed">{report.summary.overview}</p>
             </div>
 
-            <div className="border border-[#E4E4E7] bg-[#FFFFFF] p-3.5 space-y-2">
-              <div className="flex items-center justify-between">
+            <div
+              data-testid="pm-hitl-notes-card"
+              className="border border-[#09090B] bg-[#FFFFFF] p-3.5 space-y-2.5"
+            >
+              <div className="flex items-center justify-between gap-2">
                 <h3 className="font-display text-[11px] font-bold uppercase tracking-[0.14em] text-[#09090B]">
                   PM Human Notes
                 </h3>
-                <span className="text-[10px] uppercase tracking-wider text-[#52525B]">
-                  Read-only
+                <span className="inline-flex items-center gap-1 border border-[#09090B] bg-[#FAFAFA] px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-[#09090B]">
+                  <ShieldCheck className="w-3 h-3 shrink-0" aria-hidden="true" />
+                  <span>HITL Verified · Read-only</span>
                 </span>
               </div>
-              <p className="text-xs text-[#52525B] leading-relaxed whitespace-pre-wrap">
+              <p className="text-xs text-[#09090B] leading-relaxed whitespace-pre-wrap">
                 {report.summary.human_notes || 'No human notes recorded for this audit.'}
               </p>
+              <div className="flex flex-wrap items-center justify-between gap-2 border-t border-[#E4E4E7] pt-2 text-[10px] font-mono text-[#52525B] tabular-nums">
+                <span>Audit ID: {report.audit_id}</span>
+                <span>Created: {report.created_at}</span>
+              </div>
             </div>
           </div>
         )}
@@ -259,15 +275,26 @@ export default function SideInspector({
 
                       <p className="text-xs text-[#52525B] leading-relaxed">{signal.description}</p>
 
-                      <div className="text-[11px] font-mono text-[#09090B] bg-[#FAFAFA] border border-[#E4E4E7] px-2 py-1">
-                        Evidence: {signal.evidence_ref}
+                      <div className="flex items-center justify-between gap-2 text-[11px] font-mono text-[#09090B] bg-[#FAFAFA] border border-[#E4E4E7] px-2 py-1">
+                        <span className="truncate">Evidence: {signal.evidence_ref}</span>
+                        <span className="inline-flex items-center gap-1 text-[10px] font-sans font-semibold uppercase tracking-wider text-[#52525B] shrink-0">
+                          <Crosshair className="w-3 h-3 text-[#09090B]" aria-hidden="true" />
+                          <span>Fly to Node</span>
+                        </span>
                       </div>
 
                       {signal.critic_note && (
-                        <p className="text-[11px] text-[#52525B] border-t border-[#E4E4E7] pt-2 leading-relaxed">
-                          <span className="font-semibold text-[#09090B]">Critic note: </span>
-                          {signal.critic_note}
-                        </p>
+                        <div
+                          data-testid={`critic-note-${signal.id}`}
+                          className="border border-[#E4E4E7] bg-[#FAFAFA] p-2.5 space-y-1"
+                        >
+                          <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#09090B]">
+                            Critic Defense Review
+                          </div>
+                          <p className="text-[11px] text-[#52525B] leading-relaxed">
+                            {signal.critic_note}
+                          </p>
+                        </div>
                       )}
                     </button>
                   );

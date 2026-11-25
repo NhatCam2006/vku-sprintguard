@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import ForceGraph3D, { type ForceGraphMethods } from 'react-force-graph-3d';
 import * as THREE from 'three';
-import { Focus, RotateCcw, Users } from 'lucide-react';
+import { Focus, RotateCcw, ScanEye, Users } from 'lucide-react';
 import type { Graph3DData, GraphNode } from '../types/audit';
 
 interface RenderNode extends GraphNode {
@@ -20,6 +20,8 @@ interface Graph3DCanvasProps {
   graphData: Graph3DData;
   selectedNodeId: string | null;
   focusedAuthorId: string | null;
+  xRayMode: boolean;
+  flyToRequest: { nodeId: string; seq: number } | null;
   onSelectNode: (node: GraphNode) => void;
   onFocusAuthor: (authorId: string | null) => void;
   onResetView: () => void;
@@ -40,6 +42,8 @@ export default function Graph3DCanvas({
   graphData,
   selectedNodeId,
   focusedAuthorId,
+  xRayMode,
+  flyToRequest,
   onSelectNode,
   onFocusAuthor,
   onResetView,
@@ -105,37 +109,91 @@ export default function Graph3DCanvas({
     return active;
   }, [focusedAuthorId, graphData.edges]);
 
+  // Set of node IDs kept at 100% visibility when X-Ray Mode is active (probe/risk modules + connected authors).
+  const xRayNodeIds = useMemo<Set<string> | null>(() => {
+    if (!xRayMode) return null;
+    const flaggedModules = new Set<string>(
+      graphData.nodes
+        .filter((node) => node.type === 'module' && (node.status === 'probe' || node.status === 'risk'))
+        .map((node) => node.id),
+    );
+    const authorIds = new Set<string>(
+      graphData.nodes.filter((node) => node.type === 'author').map((node) => node.id),
+    );
+    const active = new Set<string>(flaggedModules);
+    for (const edge of graphData.edges) {
+      if (flaggedModules.has(edge.source) && authorIds.has(edge.target)) {
+        active.add(edge.target);
+      }
+      if (flaggedModules.has(edge.target) && authorIds.has(edge.source)) {
+        active.add(edge.source);
+      }
+    }
+    return active;
+  }, [xRayMode, graphData.nodes, graphData.edges]);
+
+  useEffect(() => {
+    if (!flyToRequest) return;
+    const node = clonedGraphData.nodes.find((n) => n.id === flyToRequest.nodeId);
+    if (!node) return;
+
+    const x = node.x ?? 0;
+    const y = node.y ?? 0;
+    const z = node.z ?? 0;
+    const camPos =
+      x === 0 && y === 0 && z === 0
+        ? { x: 0, y: 0, z: 85 }
+        : (() => {
+            const distRatio = 1 + 85 / Math.hypot(x, y, z);
+            return { x: x * distRatio, y: y * distRatio, z: z * distRatio };
+          })();
+
+    fgRef.current?.cameraPosition?.(camPos, { x, y, z }, 800);
+  }, [flyToRequest, clonedGraphData.nodes]);
+
   const isNodeDimmed = useCallback(
-    (nodeId: string) => Boolean(focusedNodeIds && !focusedNodeIds.has(nodeId)),
-    [focusedNodeIds],
+    (nodeId: string) =>
+      Boolean(
+        (focusedNodeIds && !focusedNodeIds.has(nodeId)) ||
+          (xRayNodeIds && !xRayNodeIds.has(nodeId)),
+      ),
+    [focusedNodeIds, xRayNodeIds],
   );
 
   const isLinkHighlighted = useCallback(
     (link: RenderLink) => {
-      if (!focusedAuthorId) return true;
       const sourceId = resolveEndpointId(link.source);
       const targetId = resolveEndpointId(link.target);
-      return sourceId === focusedAuthorId || targetId === focusedAuthorId;
+      if (focusedAuthorId && sourceId !== focusedAuthorId && targetId !== focusedAuthorId) {
+        return false;
+      }
+      if (xRayNodeIds && (!xRayNodeIds.has(sourceId) || !xRayNodeIds.has(targetId))) {
+        return false;
+      }
+      return true;
     },
-    [focusedAuthorId],
+    [focusedAuthorId, xRayNodeIds],
   );
+
+  const dimmedColor = xRayMode ? 'rgba(212,212,216,0.10)' : 'rgba(212,212,216,0.12)';
+  const dimmedOpacity = xRayMode ? 0.1 : 0.12;
 
   const nodeColor = useCallback(
     (rawNode: object) => {
       const node = rawNode as RenderNode;
-      if (isNodeDimmed(node.id)) return 'rgba(212,212,216,0.12)';
+      if (isNodeDimmed(node.id)) return dimmedColor;
       if (node.type === 'author') return '#09090B';
       return getModuleAccentColor(node.status);
     },
-    [isNodeDimmed],
+    [isNodeDimmed, dimmedColor],
   );
 
   const linkColor = useCallback(
     (rawLink: object) => {
       const link = rawLink as RenderLink;
-      return isLinkHighlighted(link) ? '#D4D4D8' : 'rgba(212,212,216,0.12)';
+      return isLinkHighlighted(link) ? '#D4D4D8' : dimmedColor;
     },
-    [isLinkHighlighted],
+    [isLinkHighlighted, dimmedColor],
   );
 
   const nodeThreeObject = useCallback(
@@ -153,7 +211,7 @@ export default function Graph3DCanvas({
           roughness: 0.45,
           metalness: 0.15,
           transparent: dimmed,
-          opacity: dimmed ? 0.12 : 1,
+          opacity: dimmed ? dimmedOpacity : 1,
         });
         const mesh = new THREE.Mesh(geometry, material);
 
@@ -179,7 +237,7 @@ export default function Graph3DCanvas({
         roughness: 0.35,
         metalness: 0.05,
         transparent: dimmed,
-        opacity: dimmed ? 0.12 : 1,
+        opacity: dimmed ? dimmedOpacity : 1,
       });
       group.add(new THREE.Mesh(sphereGeometry, sphereMaterial));
 
@@ -194,14 +252,14 @@ export default function Graph3DCanvas({
           color: dimmed ? '#D4D4D8' : '#09090B',
           wireframe: true,
           transparent: true,
-          opacity: dimmed ? 0.12 : isSelected ? 0.85 : 0.45,
+          opacity: dimmed ? dimmedOpacity : isSelected ? 0.85 : 0.45,
         });
         group.add(new THREE.Mesh(wireGeometry, wireMaterial));
       }
 
       return group;
     },
-    [isNodeDimmed, selectedNodeId],
+    [isNodeDimmed, selectedNodeId, dimmedOpacity],
   );
 
   const handleNodeClick = useCallback(
@@ -228,6 +286,8 @@ export default function Graph3DCanvas({
       aria-label="3D Ownership Graph Canvas"
       data-testid="graph-wrapper"
       data-focus-author={focusedAuthorId ?? ''}
+      data-xray-mode={xRayMode ? 'true' : 'false'}
+      data-fly-target={flyToRequest?.nodeId ?? ''}
       ref={containerRef}
       className="relative flex-1 min-h-[380px] orbital-grid overflow-hidden"
     >
@@ -278,6 +338,16 @@ export default function Graph3DCanvas({
 
       {/* Top-right Reset Camera control */}
       <div className="absolute top-3 right-3 flex items-center gap-2">
+        {xRayMode && (
+          <span
+            data-testid="xray-mode-indicator"
+            className="border border-[#09090B] bg-[#09090B] text-[#FFFFFF] px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-[0.14em] inline-flex items-center gap-1.5"
+          >
+            <ScanEye className="w-3 h-3" aria-hidden="true" />
+            <span>X-Ray Active</span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#DC2626]" aria-hidden="true" />
+          </span>
+        )}
         {focusedAuthorId && (
           <span
             data-testid="focus-mode-indicator"
