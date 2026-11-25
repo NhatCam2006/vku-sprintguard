@@ -116,12 +116,12 @@ export default function App() {
 
   const handleSelectNode = useCallback((node: GraphNode) => {
     setSelectedNodeId(node.id);
-    setInspectorTab('signals');
+    setInspectorTab(node.type === 'author' ? 'members' : 'components');
   }, []);
 
   const handleSelectNodeId = useCallback((nodeId: string) => {
     setSelectedNodeId(nodeId);
-    setInspectorTab('signals');
+    setInspectorTab('components');
     setFlyToRequest({ nodeId, seq: Date.now() });
   }, []);
 
@@ -199,8 +199,10 @@ export default function App() {
           report={activeReport}
           activeTab={inspectorTab}
           selectedNode={selectedNode}
+          focusedAuthorId={focusedAuthorId}
           onTabChange={setInspectorTab}
           onSelectNodeId={handleSelectNodeId}
+          onFocusAuthor={setFocusedAuthorId}
         />
       </main>
     </div>

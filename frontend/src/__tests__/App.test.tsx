@@ -237,14 +237,37 @@ describe('VKU SprintGuard Mission Control', () => {
     expect(anomalyWeek).toHaveAttribute('data-anomaly', 'true');
     expect(within(anomalyWeek).getByText('ANOMALY')).toBeInTheDocument();
 
-    // SideInspector: Overview -> Nodes & Signals -> click signal -> Interview Q&A
+    // SideInspector: Tổng quan -> Anti-Hallucination banner & PM Human Notes
+    expect(screen.getByTestId('anti-hallucination-banner')).toHaveTextContent(
+      'Chống ảo giác — Neo bằng chứng Git thật',
+    );
     expect(screen.getByText(/PM Human Notes/i)).toBeInTheDocument();
 
-    fireEvent.click(screen.getByRole('tab', { name: /Nodes & Signals/i }));
+    // Thành phần tab -> click signal -> verifies Vietnamese description, key_files, contributor % share
+    fireEvent.click(screen.getByRole('tab', { name: /Thành phần/i }));
     fireEvent.click(screen.getByTestId('signal-item-sig-01'));
-    expect(screen.getByTestId('selected-node-card')).toHaveTextContent('backend/auth');
+    const selectedCard = screen.getByTestId('selected-node-card');
+    expect(selectedCard).toHaveTextContent('backend/auth');
+    expect(selectedCard).toHaveTextContent('Cụm xử lý đăng nhập, cấp phát và làm mới JWT token');
+    expect(screen.getByTestId('selected-node-key-files')).toHaveTextContent(
+      'backend/auth/jwt_service.py',
+    );
+    expect(screen.getByTestId('selected-node-contributors')).toHaveTextContent('Minh Nguyen');
+    expect(screen.getByTestId('selected-node-contributors')).toHaveTextContent('100%');
 
-    fireEvent.click(screen.getByRole('tab', { name: /Interview Q&A/i }));
+    // Thành viên & Commit tab -> contributor shares & clickable GitHub commit_highlights links
+    fireEvent.click(screen.getByRole('tab', { name: /Thành viên & Commit/i }));
+    expect(screen.getByTestId('member-card-author:minh')).toHaveTextContent('Minh Nguyen');
+    const firstCommitCard = screen.getByTestId('commit-highlight-0');
+    const githubLink = within(firstCommitCard).getByRole('link', { name: /Mở trên GitHub/i });
+    expect(githubLink).toHaveAttribute(
+      'href',
+      'https://github.com/NhatCam2006/vku-sprintguard/commit/a1b2c3d',
+    );
+    expect(githubLink).toHaveAttribute('target', '_blank');
+
+    // Vấn đáp tab
+    fireEvent.click(screen.getByRole('tab', { name: /Vấn đáp/i }));
     expect(screen.getByText(/Walk through the Week 15 auth token refresh rewrite/i)).toBeInTheDocument();
 
     // Focus Mode via Filter by Member chip dims unrelated nodes (docs/tests is last node, unconnected to Minh)
@@ -285,7 +308,7 @@ describe('VKU SprintGuard Mission Control', () => {
       expect(screen.getByText('LIVE 3D PREVIEW')).toBeInTheDocument();
     });
 
-    fireEvent.click(screen.getByRole('tab', { name: /Interview Q&A/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /Vấn đáp/i }));
     expect(screen.getByText(/Live 3D Preview Mode/i)).toBeInTheDocument();
   });
 
@@ -339,7 +362,7 @@ describe('VKU SprintGuard Mission Control', () => {
     expect(hitlCard).toHaveTextContent(FALLBACK_AUDIT_REPORT.audit_id);
     expect(hitlCard).toHaveTextContent(FALLBACK_AUDIT_REPORT.summary.human_notes);
 
-    fireEvent.click(screen.getByRole('tab', { name: /Nodes & Signals/i }));
+    fireEvent.click(screen.getByRole('tab', { name: /Thành phần/i }));
     const signalButton = screen.getByTestId('signal-item-sig-01');
     expect(signalButton).toHaveTextContent('Fly to Node');
 
@@ -358,6 +381,26 @@ describe('VKU SprintGuard Mission Control', () => {
       { x: 0, y: 0, z: 0 },
       800,
     );
+
+    // Clicking a module node on the 3D graph switches to Thành phần and shows description & key_files
+    fireEvent.click(screen.getByTestId('mock-node-mod:frontend/map'));
+    expect(screen.getByRole('tab', { name: /Thành phần/i })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByTestId('selected-node-card')).toHaveTextContent('frontend/map');
+    expect(screen.getByTestId('selected-node-key-files')).toHaveTextContent(
+      'frontend/map/CampusMapView.tsx',
+    );
+
+    // Clicking an author node on the 3D graph switches to Thành viên & Commit and toggles Focus Mode
+    fireEvent.click(screen.getByTestId('mock-node-author:minh'));
+    expect(screen.getByRole('tab', { name: /Thành viên & Commit/i })).toHaveAttribute(
+      'aria-selected',
+      'true',
+    );
+    expect(screen.getByTestId('graph-wrapper')).toHaveAttribute('data-focus-author', 'author:minh');
+
+    // Toggling Focus trên 3D directly from Thành viên & Commit tab clears Focus Mode
+    fireEvent.click(screen.getByTestId('focus-member-btn-author:minh'));
+    expect(screen.getByTestId('graph-wrapper')).toHaveAttribute('data-focus-author', '');
   });
 
   it('falls back cleanly when backend is offline via Explore Demo Workspace', async () => {
