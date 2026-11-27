@@ -263,10 +263,10 @@ def render_html_to_pdf(html_content: str, pdf_path: Path) -> None:
     try:
         cmd = [
             MSEDGE,
-            "--headless",
+            "--headless=new",
             "--disable-gpu",
             "--no-sandbox",
-            "--print-to-pdf-no-header",
+            "--no-pdf-header-footer",
             f"--print-to-pdf={pdf_path}",
             tmp_path.as_uri(),
         ]
@@ -421,7 +421,7 @@ def build_final_technical_report() -> None:
     svg_risk = """
     <svg viewBox="0 0 680 205" width="100%" height="190" xmlns="http://www.w3.org/2000/svg" font-family="Segoe UI, Arial, sans-serif">
       <rect x="0" y="0" width="680" height="205" fill="#FFFFFF" rx="6"/>
-      <text x="20" y="22" font-size="11.5" font-weight="700" fill="#09090B">Tiến hóa Điểm Rủi ro (Wave 1 → Wave 2): Giảm 71.8% Mức độ Phơi nhiễm</text>
+      <text x="20" y="22" font-size="11.5" font-weight="700" fill="#09090B">Tiến hóa Điểm Rủi ro (Wave 1 → Wave 2): Giảm 75.4% Mức độ Phơi nhiễm (5.64 → 1.38)</text>
       <line x1="50" y1="165" x2="655" y2="165" stroke="#09090B" stroke-width="1.2"/>
       <!-- Bars for R1..R13 (W1 gray, W2 dark/red) -->
       <g font-size="8.5" text-anchor="middle">
@@ -495,26 +495,26 @@ def build_final_technical_report() -> None:
     <!-- TABLE OF CONTENTS -->
     <div class="page-break"></div>
     <div class="doc-header">
-      <div><div class="kicker">VKU-SPM-GUARD · M9 FINAL REPORT</div><h1 style="margin:0;font-size:16pt;">MỤC LỤC BÁO CÁO</h1></div>
-      <div class="meta">Phiên bản 1.0 (Final)<br/>100% Thì Quá Khứ</div>
+      <div><div class="kicker">VKU-SPM-GUARD · BÁO CÁO TỔNG KẾT</div><h1 style="margin:0;font-size:16pt;">MỤC LỤC BÁO CÁO</h1></div>
+      <div class="meta">Phiên bản 1.0<br/>25/11/2026</div>
     </div>
     <div class="card">
-      <p>Báo cáo tổng kết này đã được biên soạn theo chuẩn học phần <em>Quản trị Dự án Phần mềm (5)</em> tại VKU, phản ánh toàn bộ quá trình khởi tạo, lập kế hoạch, thực thi kỹ thuật, kiểm soát rủi ro và nghiệm thu đã diễn ra trên kho lưu trữ <code>NhatCam2006/vku-sprintguard</code>.</p>
+      <p>Báo cáo tổng kết này đã được biên soạn theo chuẩn học phần <em>Quản trị Dự án Phần mềm (5)</em> tại VKU, phản ánh toàn bộ quá trình khởi tạo, lập kế hoạch, thực thi kỹ thuật, kiểm soát rủi ro và nghiệm thu trên kho lưu trữ <code>NhatCam2006/vku-sprintguard</code>.</p>
       <table>
         <tr><th style="width:14%;">Chương</th><th>Nội dung chính đã thực hiện</th><th style="width:18%;">Mốc liên quan</th></tr>
         <tr><td><strong>Chương 1</strong></td><td>Tổng quan Dự án, Bối cảnh VKU (Pathway 3), Business Case, Mục tiêu SMART và Cơ cấu Tổ chức</td><td>M1 (Tuần 2)</td></tr>
         <tr><td><strong>Chương 2</strong></td><td>Phương pháp luận Hybrid Milestone-Gated Iterative và Hệ sinh thái Quản trị GitHub Thống nhất</td><td>M1 – M2</td></tr>
         <tr><td><strong>Chương 3</strong></td><td>Quản trị Phạm vi, Quy tắc 100% WBS và Từ điển WBS 19 Gói công việc (63 Story Points)</td><td>M2 (Tuần 3–4)</td></tr>
-        <tr><td><strong>Chương 4</strong></td><td>Ước lượng Nỗ lực, Đường găng (CPM), Tiến độ 6 Ngày, Biểu đồ Burndown &amp; Velocity Thực tế</td><td>M2 – M9</td></tr>
-        <tr><td><strong>Chương 5</strong></td><td>Thực thi Kỹ thuật, Kiến trúc Local-First + MCP, Sổ cái PR #20–#28, CI/CD và Kiểm thử Tự động</td><td>M3 – M7</td></tr>
+        <tr><td><strong>Chương 4</strong></td><td>Ước lượng Nỗ lực, Đường găng (CPM), Thực tế 3 Ngày (23–25/11), Biểu đồ Burndown &amp; Velocity</td><td>M2 – M9</td></tr>
+        <tr><td><strong>Chương 5</strong></td><td>Thực thi Kỹ thuật, Kiến trúc Local-First + MCP, Sổ cái PR #20–#29, CI/CD và Kiểm thử Tự động</td><td>M3 – M7</td></tr>
         <tr><td><strong>Chương 6</strong></td><td>Tiến hóa Quản trị Rủi ro (Wave 1 → Wave 2, R1–R13) và Kiểm soát Thay đổi (CR-001, CR-002)</td><td>M5 – M9</td></tr>
         <tr><td><strong>Chương 7</strong></td><td>Nghiệm thu, Bằng chứng Dogfooding &amp; UAT, Tổng kết Retrospective và Bài học Kinh nghiệm</td><td>M7 – M10</td></tr>
       </table>
     </div>
     <div class="card">
       <h3>Tóm tắt Điều hành (Executive Summary)</h3>
-      <p>Dự án <strong>VKU SprintGuard</strong> đã được khởi tạo và hoàn tất nhằm giải quyết nhu cầu thực tiễn tại Khoa Khoa học Máy tính, Trường Đại học VKU (<strong>Pathway 3</strong>): hỗ trợ giảng viên và sinh viên kiểm chứng tính xác thực của dự án phần mềm (<em>Authentic Project Rule</em>) trên GitHub trước các buổi bảo vệ đồ án kéo dài 16 phút. Thay vì xây dựng một công cụ chấm điểm 0–100 cứng nhắc dễ gây tranh cãi, nhóm dự án đã thiết kế và triển khai thành công một <strong>Hệ thống Hỗ trợ Ra quyết định (Decision Support System)</strong> kết hợp đo lường GitHub tất định (deterministic telemetry), giao diện 3D <em>Interstellar Light Minimalism</em> và khung điều phối AI <code>sprintguard-mcp</code> gồm 6 công cụ, 5 trạm trạng thái bắt buộc gắn bằng chứng (<code>valid_refs</code>) và cổng phê duyệt của con người (Human-in-the-Loop).</p>
-      <p>Trong suốt 2 Sprint (6 ngày thực thi tăng tốc ánh xạ vào 10 mốc M1–M10), nhóm đã hoàn tất toàn bộ 19 gói công việc WBS (<code>63</code> Story Points: <code>42</code> SP Sprint 1 và <code>21</code> SP Sprint 2), hợp nhất 9 Pull Request (<code>PR #20</code> đến <code>PR #28</code>) với tỷ lệ vượt qua CI đạt <code>100%</code> (<code>22</code> kiểm thử <code>pytest</code> và <code>6</code> kiểm thử <code>vitest</code>), kiểm soát chặt chẽ 2 Yêu cầu Thay đổi (<code>CR-001</code>, <code>CR-002</code>) mà không trễ tiến độ, giảm <code>71.8%</code> điểm phơi nhiễm rủi ro trung bình, và xác thực hệ thống qua 2 phiên kiểm toán sâu trực tiếp (<code>aud_deep_995a9cba</code> trên <code>vku-sprintguard</code> và <code>aud_deep_faa0899d</code> trên <code>fastapi/typer</code>) với tổng chi phí hạ tầng và API bằng <code>$0</code>.</p>
+      <p>Dự án <strong>VKU SprintGuard</strong> đã được khởi tạo và hoàn tất nhằm giải quyết nhu cầu thực tiễn tại Khoa Khoa học Máy tính, Trường Đại học VKU (<strong>Pathway 3</strong>): hỗ trợ giảng viên và sinh viên kiểm chứng tính xác thực của dự án phần mềm (<em>Authentic Project Rule</em>) trên GitHub trước các buổi bảo vệ đồ án kéo dài 16 phút. Thay vì xây dựng một công cụ chấm điểm 0–100 cứng nhắc dễ gây tranh cãi, dự án đã triển khai <strong>Hệ thống Hỗ trợ Ra quyết định (Decision Support System)</strong> kết hợp đo lường GitHub tất định, giao diện 3D <em>Interstellar Light Minimalism</em> và khung điều phối AI <code>sprintguard-mcp</code> gồm 6 công cụ, 5 trạm trạng thái bắt buộc gắn bằng chứng (<code>valid_refs</code>) và cổng phê duyệt của con người (Human-in-the-Loop).</p>
+      <p>Theo kế hoạch baseline gồm 6 chặng ánh xạ vào 10 mốc học phần (M1–M10), nhóm đã hoàn thành vượt tiến độ trong <strong>3 ngày dương lịch thực tế (23/11 – 25/11/2026)</strong> nhờ điều phối song song trên Git worktree: hoàn tất toàn bộ 19 gói công việc WBS (<code>63</code> Story Points: <code>42</code> SP Sprint 1 và <code>21</code> SP Sprint 2), hợp nhất 10 Pull Request (<code>PR #20</code>–<code>#29</code>) với CI xanh <code>100%</code> (<code>22</code> <code>pytest</code> + <code>6</code> <code>vitest</code>), xử lý 2 Yêu cầu Thay đổi (<code>CR-001</code>, <code>CR-002</code>) đúng quy trình CCB, giảm <code>75.4%</code> điểm rủi ro trung bình (<code>5.64 → 1.38</code>) và xác thực qua 2 phiên kiểm toán sâu trực tiếp (<code>aud_deep_995a9cba</code> và <code>aud_deep_faa0899d</code>) với chi phí <code>$0</code>.</p>
     </div>
 
     <!-- CHAPTER 1 -->
@@ -551,7 +551,7 @@ def build_final_technical_report() -> None:
     <h2>1.3. Đối chiếu Mục tiêu SMART đã Hoàn thành</h2>
     <table>
       <tr><th style="width:14%;">Mục tiêu</th><th>Cam kết trong Project Charter §4</th><th>Kết quả Thực tế đã Xác thực</th><th style="width:12%;">Trạng thái</th></tr>
-      <tr><td><strong>SMART-1</strong></td><td>Hoàn tất Sprint 1 Local-First MVP (<code>:8000</code> + <code>:5173</code>) trong Ngày 3 và khung MCP 6 công cụ trong Ngày 6.</td><td>Đã bàn giao Sprint 1 tại <code>PR #22</code>–<code>#24</code> (Ngày 3) và <code>sprintguard-mcp</code> tại <code>PR #25</code> (Ngày 4), nâng cấp <code>CR-002</code> tại <code>PR #28</code> (Ngày 6).</td><td class="center"><span class="badge badge-ok">ĐẠT 100%</span></td></tr>
+      <tr><td><strong>SMART-1</strong></td><td>Hoàn tất Sprint 1 Local-First MVP (<code>:8000</code> + <code>:5173</code>) theo kế hoạch Chặng 3 và khung MCP 6 công cụ ở Sprint 2.</td><td>Đã bàn giao Sprint 1 tại <code>PR #22</code>–<code>#24</code> (23/11), <code>sprintguard-mcp</code> tại <code>PR #25</code> (24/11) và hoàn thiện M7 + <code>CR-002</code> tại <code>PR #26</code>–<code>#28</code> (25/11).</td><td class="center"><span class="badge badge-ok">ĐẠT 100%</span></td></tr>
       <tr><td><strong>SMART-2</strong></td><td>Kiểm chứng Live 3D Preview trên <code>vku-sprintguard</code> ở Sprint 1 và Dogfooding/UAT thực tế ở Sprint 2.</td><td>Đã xác thực Live Preview (10 nodes, 9 edges), Dogfooding <code>aud_deep_995a9cba</code> (<code>vku-sprintguard</code>), <code>aud_deep_faa0899d</code> (<code>fastapi/typer</code>) và bộ kịch bản UAT 6 tình huống.</td><td class="center"><span class="badge badge-ok">ĐẠT 100%</span></td></tr>
       <tr><td><strong>SMART-3</strong></td><td>100% Conventional Commits, CI xanh trên mọi PR, theo dõi 100% WBS trên GitHub Projects v2 5 cột.</td><td>100% commit chuẩn, 9/9 PR vượt qua CI (<code>22</code> pytest + <code>6</code> vitest), 19/19 Issue gắn bảng 5 cột với 6 file snapshot JSON theo mốc.</td><td class="center"><span class="badge badge-ok">ĐẠT 100%</span></td></tr>
       <tr><td><strong>SMART-4</strong></td><td>Không triển khai đám mây sớm; hoàn thiện 8 tệp Google Drive Evidence Package, rủi ro Wave 2 và <code>CR-001</code>/<code>CR-002</code>.</td><td>Đã giữ trọn mô hình Local-First, biên soạn đầy đủ 8 tệp (9 file kèm PDF slide) chuẩn xác, không rò rỉ bí mật hay <code>docs/reference/</code>.</td><td class="center"><span class="badge badge-ok">ĐẠT 100%</span></td></tr>
@@ -671,7 +671,7 @@ def build_final_technical_report() -> None:
       <tr><td><code>1.5.2</code></td><td>Antigravity <code>SKILL.md</code>, <code>mcp_config.json</code> &amp; Live Test</td><td class="center">#16</td><td class="center">3</td><td class="center">Sprint 2</td><td class="center">PR #25</td><td class="center"><span class="badge badge-ok">Done</span></td></tr>
       <tr><td><code>1.6.1</code></td><td>Deep AI Inspector (Fly-to, X-Ray, Critic/HITL + CR-002)</td><td class="center">#17</td><td class="center">3</td><td class="center">Sprint 2</td><td class="center">PR #26/#28</td><td class="center"><span class="badge badge-ok">Done</span></td></tr>
       <tr><td><code>1.6.2</code></td><td>Dogfooding Audit &amp; VKU Peer UAT Script/Sign-off</td><td class="center">#18</td><td class="center">5</td><td class="center">Sprint 2</td><td class="center">PR #27</td><td class="center"><span class="badge badge-ok">Done</span></td></tr>
-      <tr><td><code>1.1.5</code></td><td>Gói Bằng chứng 8 tệp Drive, Wave 2 Risks &amp; <code>v1.0.0</code></td><td class="center">#19</td><td class="center">5</td><td class="center">Sprint 2</td><td class="center">PR #29</td><td class="center"><span class="badge badge-amber">In Review</span></td></tr>
+      <tr><td><code>1.1.5</code></td><td>Gói Bằng chứng 8 tệp Drive, Wave 2 Risks &amp; <code>v1.0.0</code></td><td class="center">#19</td><td class="center">5</td><td class="center">Sprint 2</td><td class="center">PR #29</td><td class="center"><span class="badge badge-ok">Done</span></td></tr>
     </table>
 
     <!-- CHAPTER 4 -->
@@ -681,12 +681,12 @@ def build_final_technical_report() -> None:
       <div class="meta">Mốc M2 – M9 · Đo lường Tiến độ</div>
     </div>
     <h2>4.1. Phương pháp Ước lượng &amp; Phân tích Đường găng (CPM)</h2>
-    <p>Mỗi gói công việc lá đã được ước lượng bằng dãy Fibonacci (<code>2</code>, <code>3</code>, <code>5</code> Story Points), bảo đảm kích thước gói công việc không vượt quá 1 ngày thực thi tăng tốc (tương đương 1–2 tuần học kỳ). Dựa trên đồ thị phụ thuộc kỹ thuật, <strong>Đường găng (Critical Path)</strong> của dự án đã đi qua 7 chặng nối tiếp với tổng thời lượng 6 ngày thực thi (<code>Float = 0</code>):</p>
+    <p>Mỗi gói công việc lá đã được ước lượng bằng dãy Fibonacci (<code>2</code>, <code>3</code>, <code>5</code> Story Points). Kế hoạch baseline dự kiến phân bổ 6 chặng tăng tốc (tương đương 15 tuần học kỳ); tuy nhiên trên thực tế, nhờ thực thi song song trên các Git worktree tách biệt, dự án đã hoàn thành toàn bộ đường găng <strong>trong 3 ngày dương lịch (23/11 – 25/11/2026)</strong>:</p>
     <div class="card">
       <strong>Đường găng CPM đã kiểm soát:</strong><br/>
       <code>1.1.2</code> (CI &amp; Node 26 Smoke, 0.5d) → <code>1.2.1</code> (Schemas &amp; API Contract, 0.5d) → <code>1.2.4</code> (GitHub Telemetry &amp; <code>/api/preview</code>, 1.0d) → <code>1.3.2</code> (Graph3DCanvas, 1.0d) → <code>1.4.1</code> (Localhost E2E &amp; Gate 2, 0.5d) → <code>1.5.1</code> (MCP 5-Station Harness, 1.0d) → <code>1.6.2</code> (Dogfooding &amp; UAT, 1.0d) → <code>1.1.5</code> (Gói Bằng chứng M9, 0.5d).
     </div>
-    <p>Các gói công việc song song như tài liệu khởi tạo (<code>1.1.1</code>), bộ kiểm thử tự động (<code>1.2.5</code>, <code>1.3.4</code>) và hoàn thiện <code>SideInspector</code> (<code>1.6.1</code>) đã được thực hiện đồng thời trên các Git worktree tách biệt, tạo ra khoảng dự phòng (buffer) đủ để hấp thụ yêu cầu thay đổi <code>CR-002</code> vào Ngày 6 mà không làm trễ mốc M9.</p>
+    <p>Các gói công việc song song như tài liệu khởi tạo (<code>1.1.1</code>), bộ kiểm thử tự động (<code>1.2.5</code>, <code>1.3.4</code>) và hoàn thiện <code>SideInspector</code> (<code>1.6.1</code>) đã được chạy đồng thời, tạo khoảng đệm thời gian giúp hấp thụ trọn vẹn yêu cầu thay đổi <code>CR-002</code> ngay trong ngày 25/11 mà không trễ mốc đóng dự án.</p>
 
     <h2>4.2. Biểu đồ Burndown &amp; Velocity Thực tế</h2>
     <div class="chart-wrap">
@@ -702,12 +702,12 @@ def build_final_technical_report() -> None:
     <p>Để đáp ứng yêu cầu kiểm toán lịch sử bảng thực (phòng ngừa rủi ro <code>R8</code>), nhóm đã xuất 6 tệp JSON trực tiếp từ GitHub Projects v2 vào thư mục <code>docs/qlda/board_snapshots/</code>:</p>
     <table>
       <tr><th>STT</th><th>Tệp Snapshot JSON</th><th>Thời điểm / Mốc</th><th class="num">Done (SP)</th><th class="num">In Review (SP)</th><th class="num">Còn lại (SP)</th><th>Diễn giải trạng thái thực tế</th></tr>
-      <tr><td class="center">1</td><td><code>sprint1_start.json</code></td><td>Ngày 1 · M2 Khởi động</td><td class="num">0</td><td class="num">6</td><td class="num">63</td><td>19 Issues đã gắn bảng; #1–#2 đang In Review (PR #20).</td></tr>
-      <tr><td class="center">2</td><td><code>sprint1_day1_eod.json</code></td><td>Ngày 1 · Sau Gate 1</td><td class="num">6</td><td class="num">0</td><td class="num">57</td><td>PM đã merge PR #20; #1, #2 chuyển sang Done.</td></tr>
-      <tr><td class="center">3</td><td><code>sprint1_mid_m3.json</code></td><td>Ngày 2 · Sau M3</td><td class="num">24</td><td class="num">0</td><td class="num">39</td><td>Backend Core (#4–#8) hoàn tất &amp; merge PR #22.</td></tr>
-      <tr><td class="center">4</td><td><code>sprint1_end_review.json</code></td><td>Ngày 3 · M5 Gate 2</td><td class="num">24</td><td class="num">18</td><td class="num">39</td><td>Frontend 3D (#9–#13) &amp; #14 chờ PM Gate 2 (PR #23, #24).</td></tr>
-      <tr><td class="center">5</td><td><code>sprint2_day5_m7.json</code></td><td>Ngày 5 · M7 Xong</td><td class="num">58</td><td class="num">0</td><td class="num">5</td><td>Hoàn tất Sprint 1 + MCP (#15–#16) + Inspector (#17) + UAT (#18).</td></tr>
-      <tr><td class="center">6</td><td><code>sprint2_final_pre_close.json</code></td><td>Ngày 6 · M9 Pre-Close</td><td class="num">58</td><td class="num">5</td><td class="num">5</td><td>18/19 Issue đã Done (58 SP); #19 (5 SP) đang In Review (PR #29).</td></tr>
+      <tr><td class="center">1</td><td><code>sprint1_start.json</code></td><td>23/11 · Chặng 1 (M2)</td><td class="num">0</td><td class="num">6</td><td class="num">63</td><td>19 Issues đã gắn bảng; #1–#2 đang In Review (PR #20).</td></tr>
+      <tr><td class="center">2</td><td><code>sprint1_day1_eod.json</code></td><td>23/11 · Sau Gate 1</td><td class="num">6</td><td class="num">0</td><td class="num">57</td><td>PM đã merge PR #20; #1, #2 chuyển sang Done.</td></tr>
+      <tr><td class="center">3</td><td><code>sprint1_mid_m3.json</code></td><td>23/11 · Chặng 2 (M3)</td><td class="num">24</td><td class="num">0</td><td class="num">39</td><td>Backend Core (#4–#8) hoàn tất &amp; merge PR #22.</td></tr>
+      <tr><td class="center">4</td><td><code>sprint1_end_review.json</code></td><td>23/11 · Chặng 3 (M5)</td><td class="num">24</td><td class="num">18</td><td class="num">39</td><td>Frontend 3D (#9–#13) &amp; #14 chờ PM Gate 2 (PR #23, #24).</td></tr>
+      <tr><td class="center">5</td><td><code>sprint2_day5_m7.json</code></td><td>25/11 · Chặng 5 (M7)</td><td class="num">58</td><td class="num">0</td><td class="num">5</td><td>Hoàn tất Sprint 1 + MCP (#15–#16) + Inspector (#17) + UAT (#18).</td></tr>
+      <tr><td class="center">6</td><td><code>sprint2_final_pre_close.json</code></td><td>25/11 · Chặng 6 (M9)</td><td class="num">58</td><td class="num">5</td><td class="num">5</td><td>18/19 Issue đã Done (58 SP); #19 (5 SP) đang In Review (PR #29).</td></tr>
     </table>
 
     <!-- CHAPTER 5 -->
@@ -734,7 +734,7 @@ def build_final_technical_report() -> None:
     <ul>
       <li><strong>Giao diện Interstellar Light Minimalism:</strong> Đã xây dựng màn hình Landing Screen với ô nhập URL GitHub Live Preview và thẻ báo cáo mẫu, thanh <code>TopBar</code> hiển thị trạng thái <code>/health</code> thời gian thực và nút bật/tắt <code>[X-Ray]</code>.</li>
       <li><strong>Đồ thị 3D (<code>Graph3DCanvas.tsx</code>):</strong> Đã mã hóa trực quan khối đa diện đen (<code>#09090B</code>) cho tác giả và hình cầu mã màu cho module (trắng/viền đen cho <code>healthy</code>, hổ phách <code>#D97706</code> cho <code>probe</code>, đỏ <code>#DC2626</code> cho <code>risk</code>). Hỗ trợ <strong>Focus Mode</strong> làm mờ các nút không liên quan xuống ~10%, <strong>Camera Fly-to</strong> khi nhấn vào tín hiệu và nút <code>[Reset Camera]</code>.</li>
-      <li><strong>Thanh tra 4 Tab Tiếng Việt (<code>SideInspector.tsx</code> — CR-002):</strong> Đã nâng cấp bảng thanh tra thành 4 tab tiếng Việt rõ ràng (<code>Tổng quan</code>, <code>Chi tiết nút</code>, <code>Tín hiệu &amp; Phản biện</code>, <code>Câu hỏi vấn đáp</code>), hiển thị mô tả chức năng module, danh sách <code>key_files</code> thực tế và các liên kết commit GitHub bấm được trực tiếp để chống ảo giác AI.</li>
+      <li><strong>Thanh tra 4 Tab Tiếng Việt (<code>SideInspector.tsx</code> — CR-002):</strong> Đã nâng cấp bảng thanh tra thành 4 tab tiếng Việt rõ ràng (<code>Tổng quan</code>, <code>Thành phần</code>, <code>Thành viên &amp; Commit</code>, <code>Vấn đáp</code>), hiển thị mô tả chức năng module, danh sách <code>key_files</code> thực tế và các liên kết commit GitHub bấm được trực tiếp để chống ảo giác AI.</li>
     </ul>
 
     <h3>5.1.3. Tầng MCP 5-Station State Machine (<code>mcp_server/</code>, <code>skills/</code>)</h3>
@@ -774,7 +774,7 @@ def build_final_technical_report() -> None:
     <p>Khác với các danh mục rủi ro tĩnh chỉ lập một lần ở đầu kỳ, Sổ đăng ký Rủi ro của VKU SprintGuard đã được cập nhật thực chất qua hai làn sóng: <strong>Wave 1</strong> (khởi tạo M1 và cập nhật thực tế Sprint 1 tại M5 với 11 rủi ro <code>R1</code>–<code>R11</code>) và <strong>Wave 2</strong> (cập nhật kết quả Sprint 2 tại M7–M9, đóng 6 rủi ro đã triệt tiêu và bổ sung 2 rủi ro thực tế mới phát sinh trong Sprint 2 là <code>R12</code> và <code>R13</code>). Toàn bộ công thức tính điểm (<code>Score = Prob × Impact</code>) đã được số hóa trong tệp <code>04_Risk_Register_Evolution.xlsx</code>.</p>
     <div class="chart-wrap">
       {svg_risk}
-      <div class="chart-cap">Hình 6.1 — So sánh điểm rủi ro từng hạng mục (R1–R13) giữa Wave 1 (trung bình 5.18) và Wave 2 (trung bình 1.46).</div>
+      <div class="chart-cap">Hình 6.1 — So sánh điểm rủi ro từng hạng mục (R1–R13) giữa Wave 1 (trung bình 5.64) và Wave 2 (trung bình 1.38).</div>
     </div>
 
     <table>
@@ -844,7 +844,7 @@ def build_final_technical_report() -> None:
 
     <div class="card avoid-break" style="margin-top:16px;">
       <h3>Kết luận &amp; Trạng thái Sẵn sàng Bảo vệ (M10)</h3>
-      <p>Toàn bộ 19 gói công việc WBS (<code>63</code> Story Points), 9 Pull Request kỹ thuật và tài liệu, 28 kiểm thử tự động (100% CI xanh), 2 phiên kiểm toán sâu thực tế và 8 hạng mục trong Gói Bằng chứng Google Drive đã được hoàn tất đồng bộ. Hệ thống VKU SprintGuard đã sẵn sàng cho phiên phê duyệt cuối cùng của Human PM (hợp nhất <code>PR #29</code>, gắn thẻ phát hành <code>v1.0.0</code>) và buổi bảo vệ đồ án 16 phút trước Hội đồng Khoa Khoa học Máy tính, Trường Đại học VKU.</p>
+      <p>Toàn bộ 19 gói công việc WBS (<code>63</code> Story Points), 10 Pull Request (<code>#20</code>–<code>#29</code> đã hợp nhất, kèm bản rà soát đồng bộ cuối), 28 kiểm thử tự động (100% CI xanh), 2 phiên kiểm toán sâu thực tế và 8 hạng mục trong Gói Bằng chứng Google Drive đã được hoàn tất đồng bộ. Hệ thống VKU SprintGuard đã sẵn sàng cho bước gắn thẻ phát hành <code>v1.0.0</code> và buổi bảo vệ đồ án 16 phút trước Hội đồng Khoa Khoa học Máy tính, Trường Đại học VKU.</p>
     </div>
     """
 
@@ -924,9 +924,9 @@ def build_final_technical_report() -> None:
     <p>Toàn bộ 8 hạng mục bắt buộc theo <em>Project-Guidelines.md §5</em> và <em>EvidencePackageChecklist.md</em> đã được xuất tự động qua tập lệnh <code>scripts/generate_evidence_package.py</code> (đảm bảo tính tái lập và đồng nhất thẩm mỹ <em>Interstellar Light Minimalism</em>):</p>
     <table>
       <tr><th class="center" style="width:7%;">STT</th><th style="width:36%;">Tên tệp bàn giao</th><th class="center" style="width:12%;">Định dạng</th><th>Mô tả nội dung &amp; Tiêu chuẩn đã kiểm chứng</th></tr>
-      <tr><td class="center">1</td><td><code>01_Final_Technical_Report.pdf</code></td><td class="center">PDF (A4)</td><td>Báo cáo kỹ thuật 7 chương + 3 phụ lục, 100% thì quá khứ tiếng Việt, biểu đồ SVG thực.</td></tr>
+      <tr><td class="center">1</td><td><code>01_Final_Technical_Report.pdf</code></td><td class="center">PDF (A4)</td><td>Báo cáo kỹ thuật 7 chương + 3 phụ lục, biểu đồ SVG thực tế và nhật ký kiểm chứng.</td></tr>
       <tr><td class="center">2</td><td><code>02_Project_Charter_Signed.pdf</code></td><td class="center">PDF (A4)</td><td>Đầy đủ 13 mục Project Charter gốc kèm khung chữ ký Đinh Nhật Cảm &amp; TS. Nguyễn Thanh Tuấn.</td></tr>
-      <tr><td class="center">3</td><td><code>03_WBS_and_WBS_Dictionary.pdf</code></td><td class="center">PDF (A4)</td><td>Cây WBS 100% Rule, Từ điển 19 gói công việc (63 SP) và lộ trình thực thi 6 ngày.</td></tr>
+      <tr><td class="center">3</td><td><code>03_WBS_and_WBS_Dictionary.pdf</code></td><td class="center">PDF (A4)</td><td>Cây WBS 100% Rule, Từ điển 19 gói công việc (63 SP) và lộ trình kế hoạch 6 chặng.</td></tr>
       <tr><td class="center">4</td><td><code>04_Risk_Register_Evolution.xlsx</code></td><td class="center">Excel (.xlsx)</td><td>3 trang tính (Dashboard, Wave 1, Wave 2), phông Arial, 100% công thức động chuẩn Excel 2007.</td></tr>
       <tr><td class="center">5</td><td><code>05_Sprint_Retrospectives.pdf</code></td><td class="center">PDF (A4)</td><td>Hồi cứu Sprint 1 (4Ls) và Hồi cứu Toàn dự án (Sailboat) kèm bảng hành động đã hoàn tất.</td></tr>
       <tr><td class="center">6</td><td><code>06_Scope_Change_Control_Record.pdf</code></td><td class="center">PDF (A4)</td><td>Sổ cái CCB và hồ sơ phê duyệt chi tiết hai thay đổi <code>CR-001</code> &amp; <code>CR-002</code>.</td></tr>
@@ -937,7 +937,7 @@ def build_final_technical_report() -> None:
 
     <div class="card avoid-break" style="margin-top:20px;">
       <h3>Xác nhận Độc lập của Bộ phận QA &amp; Đóng gói Phát hành</h3>
-      <p>Tất cả các số liệu về Story Points (<code>42 + 21 = 63</code>), Pull Requests (<code>#20</code>–<code>#28</code>), mã SHA commit, kiểm thử tự động (<code>22</code> pytest + <code>6</code> vitest), điểm rủi ro Wave 1→2 và mã kiểm toán trực tiếp (<code>aud_deep_995a9cba</code>, <code>aud_deep_faa0899d</code>) trong báo cáo này đã được đối chiếu trực tiếp với lịch sử Git, GitHub Projects v2 và mã nguồn thực tế trên nhánh <code>main</code> (<code>67ca6b0</code>).</p>
+      <p>Tất cả các số liệu về Story Points (<code>42 + 21 = 63</code>), Pull Requests (<code>#20</code>–<code>#29</code>), mã SHA commit, kiểm thử tự động (<code>22</code> pytest + <code>6</code> vitest), điểm rủi ro Wave 1→2 và mã kiểm toán trực tiếp (<code>aud_deep_995a9cba</code>, <code>aud_deep_faa0899d</code>) trong báo cáo này đã được đối chiếu trực tiếp với lịch sử Git, GitHub Projects v2 và mã nguồn thực tế trên nhánh <code>main</code> (<code>67ca6b0</code>).</p>
       <table class="sig-table" style="margin-top:12px;">
         <tr>
           <td style="width:50%;"><span class="sig-title">Người lập báo cáo / Human PM</span><strong>Đinh Nhật Cảm (MSSV: 24Ite019)</strong><br/><span class="muted">Ngày: 25 / 11 / 2026</span></td>
@@ -959,7 +959,7 @@ def build_final_technical_report() -> None:
 def build_project_charter_pdf() -> None:
     body = """
     <div class="doc-header">
-      <div><div class="kicker">DELIVERABLE 02 · SOFTWARE PROJECT CHARTER</div><h1 style="margin:0;font-size:16pt;">VKU SPRINTGUARD (VKU-SPM-GUARD)</h1></div>
+      <div><div class="kicker">ĐIỀU LỆ DỰ ÁN · SOFTWARE PROJECT CHARTER</div><h1 style="margin:0;font-size:16pt;">VKU SPRINTGUARD (VKU-SPM-GUARD)</h1></div>
       <div class="meta">Course: Quản trị dự án phần mềm (5)<br/>Instructor: TS. Nguyễn Thanh Tuấn</div>
     </div>
 
@@ -1002,7 +1002,7 @@ def build_project_charter_pdf() -> None:
         <h3>5.1. In-Scope (Committed Deliverables)</h3>
         <ul>
           <li><strong>Module 1 — Backend (<code>backend/</code>):</strong> FastAPI, CORS, <code>/health</code>, <code>/api/audits</code> (X-API-Key), <code>/api/preview</code>, SQLite auto-seed (3 profiles), GitHub REST client (100 commits / 30 PRs), Diff Filter, 2-level 40-module Clusterer, Timeline 2D.</li>
-          <li><strong>Module 2 — Frontend 3D (<code>frontend/</code>):</strong> Interstellar Light Minimalism UI, Landing Screen, <code>Graph3DCanvas</code> (Focus Mode, Reset Camera, Fly-to, X-Ray), <code>Timeline2D</code>, <code>SideInspector</code> (enhanced via CR-002).</li>
+          <li><strong>Module 2 — Frontend 3D (<code>frontend/</code>):</strong> Interstellar Light Minimalism UI, Landing Screen, <code>Graph3DCanvas</code> (Focus Mode, Reset Camera, Fly-to, X-Ray), <code>Timeline2D</code>, <code>SideInspector</code>.</li>
           <li><strong>Module 3 — MCP Harness &amp; UAT (<code>mcp_server/</code>, <code>skills/</code>):</strong> <code>sprintguard-mcp</code> 6-tool 5-station State Machine, <code>valid_refs</code>, HITL gate, <code>SKILL.md</code>, Dogfooding &amp; VKU Peer UAT.</li>
           <li><strong>Governance:</strong> 5-col Projects v2 board, 19 WBS Issues, CI workflow, QLDA docs, 8 Drive deliverables.</li>
         </ul>
@@ -1011,7 +1011,7 @@ def build_project_charter_pdf() -> None:
         <h3>5.2. Explicitly Out-of-Scope</h3>
         <ul>
           <li>Automated 0–100 numeric grading scorecards replacing instructor judgment.</li>
-          <li>Server-side <code>LangGraph</code> pipelines or paid external LLM APIs (Groq/OpenAI) — replaced by Antigravity MCP at <code>$0</code> (<code>CR-001</code>).</li>
+          <li>Server-side <code>LangGraph</code> pipelines or paid external LLM APIs (Groq/OpenAI).</li>
           <li>Premature cloud deployment (Vercel/Render/Cloudflare) during Local-First execution.</li>
           <li>VKU SSO/LDAP integration, multi-tenant user registration, paid cloud infra, or external PM tools (Jira, Trello, Notion).</li>
         </ul>
@@ -1034,22 +1034,22 @@ def build_project_charter_pdf() -> None:
       <tr><td>Source Code</td><td><code>NhatCam2006/vku-sprintguard</code></td><td>Branch protection on <code>main</code>, Conventional Commits, feature-branch PRs only.</td></tr>
       <tr><td>Board &amp; Tracking</td><td>GitHub Projects v2 (<code>#1</code>)</td><td>5 columns (<code>Backlog</code>, <code>Ready</code>, <code>In Progress</code>, <code>In Review</code>, <code>Done</code>), <code>Story Points</code> &amp; <code>Iteration</code> fields.</td></tr>
       <tr><td>Work Packages</td><td>GitHub Issues (<code>#1</code>–<code>#19</code>)</td><td>1:1 mapping per leaf WBS package with Acceptance Criteria &amp; Milestone.</td></tr>
-      <tr><td>Code Review</td><td>Pull Requests (<code>#20</code>–<code>#29</code>)</td><td>Single-Account Rule: <code>approvals: 0</code> + required CI + independent QA comment + PM merge.</td></tr>
+      <tr><td>Code Review</td><td>GitHub Pull Requests</td><td>Single-Account Rule: <code>approvals: 0</code> + required CI + independent QA comment + PM merge.</td></tr>
       <tr><td>CI/CD</td><td><code>.github/workflows/ci.yml</code></td><td>Automated <code>ruff</code>, <code>pytest</code>, <code>tsc</code>, <code>eslint</code>, <code>vitest</code>, <code>npm run build</code> on every PR.</td></tr>
     </table>
 
     <h2>8. High-Level Milestones &amp; Schedule (M1–M10)</h2>
     <table>
-      <tr><th class="center">Milestone</th><th class="center">Course Week / Day</th><th>Major Deliverables</th></tr>
-      <tr><td class="center"><strong>M1</strong></td><td class="center">Week 2 (Day 1)</td><td>Project Charter (13 sections), <code>.env.example</code>, <code>ci.yml</code>, Python 3.11 / Node 26 smoke build</td></tr>
-      <tr><td class="center"><strong>M2</strong></td><td class="center">Weeks 3–4 (Day 1–2)</td><td>WBS &amp; Dictionary (100% Rule), 19 Issues, 5-col Projects v2 Board &amp; Start Snapshot</td></tr>
-      <tr><td class="center"><strong>M3</strong></td><td class="center">Week 5 (Day 2)</td><td>Backend Core (FastAPI, SQLite auto-seed, GitHub Client, Clusterer, <code>/api/preview</code>, pytest)</td></tr>
-      <tr><td class="center"><strong>M4</strong></td><td class="center">Weeks 6–7 (Day 3)</td><td>Frontend 3D Interstellar UI (Landing, Graph3DCanvas, Timeline2D, SideInspector, vitest)</td></tr>
-      <tr><td class="center"><strong>M5</strong></td><td class="center">Weeks 8–9 (Day 3)</td><td>Localhost Dual-Server E2E, Board Snapshots, Wave 1 Risk Actuals → PM Gate 2</td></tr>
-      <tr><td class="center"><strong>M6</strong></td><td class="center">Weeks 9–10 (Day 4)</td><td><code>sprintguard-mcp</code> (6 tools, 5 stations, <code>valid_refs</code>, HITL) &amp; <code>SKILL.md</code></td></tr>
-      <tr><td class="center"><strong>M7</strong></td><td class="center">Weeks 11–12 (Day 5)</td><td>Deep AI Inspector (Fly-to, X-Ray, Critic/HITL, CR-002), Dogfooding &amp; Wave 2 Risks</td></tr>
-      <tr><td class="center"><strong>M8–M9</strong></td><td class="center">Weeks 13–14 (Day 6)</td><td>VKU Peer UAT Kit, Retrospectives, CCB Record, 8 Drive Deliverables &amp; Release <code>v1.0.0</code></td></tr>
-      <tr><td class="center"><strong>M10</strong></td><td class="center">Week 15 (Defense)</td><td>16-minute Oral Defense &amp; Live System Demo before VKU Evaluation Committee</td></tr>
+      <tr><th class="center" style="width:12%;">Milestone</th><th class="center" style="width:24%;white-space:nowrap;">Course Week / Plan</th><th>Major Deliverables</th></tr>
+      <tr><td class="center"><strong>M1</strong></td><td class="center" style="white-space:nowrap;">Week 2 (Stage 1)</td><td>Project Charter (13 sections), <code>.env.example</code>, <code>ci.yml</code>, Python 3.11 / Node 26 smoke build</td></tr>
+      <tr><td class="center"><strong>M2</strong></td><td class="center" style="white-space:nowrap;">Weeks 3–4 (Stage 1–2)</td><td>WBS &amp; Dictionary (100% Rule), 19 Issues, 5-col Projects v2 Board &amp; Start Snapshot</td></tr>
+      <tr><td class="center"><strong>M3</strong></td><td class="center" style="white-space:nowrap;">Week 5 (Stage 2)</td><td>Backend Core (FastAPI, SQLite auto-seed, GitHub Client, Clusterer, <code>/api/preview</code>, pytest)</td></tr>
+      <tr><td class="center"><strong>M4</strong></td><td class="center" style="white-space:nowrap;">Weeks 6–7 (Stage 3)</td><td>Frontend 3D Interstellar UI (Landing, Graph3DCanvas, Timeline2D, SideInspector, vitest)</td></tr>
+      <tr><td class="center"><strong>M5</strong></td><td class="center" style="white-space:nowrap;">Weeks 8–9 (Stage 3)</td><td>Localhost Dual-Server E2E, Board Snapshots, Wave 1 Risk Actuals → PM Gate 2</td></tr>
+      <tr><td class="center"><strong>M6</strong></td><td class="center" style="white-space:nowrap;">Weeks 9–10 (Stage 4)</td><td><code>sprintguard-mcp</code> (6 tools, 5 stations, <code>valid_refs</code>, HITL) &amp; <code>SKILL.md</code></td></tr>
+      <tr><td class="center"><strong>M7</strong></td><td class="center" style="white-space:nowrap;">Weeks 11–12 (Stage 5)</td><td>Deep AI Inspector (Fly-to, X-Ray, Critic/HITL), Dogfooding &amp; Wave 2 Risks</td></tr>
+      <tr><td class="center"><strong>M8–M9</strong></td><td class="center" style="white-space:nowrap;">Weeks 13–14 (Stage 6)</td><td>VKU Peer UAT Kit, Retrospectives, CCB Record, 8 Drive Deliverables &amp; Release <code>v1.0.0</code></td></tr>
+      <tr><td class="center"><strong>M10</strong></td><td class="center" style="white-space:nowrap;">Week 15 (Defense)</td><td>16-minute Oral Defense &amp; Live System Demo before VKU Evaluation Committee</td></tr>
     </table>
 
     <div class="page-break"></div>
@@ -1060,11 +1060,11 @@ def build_project_charter_pdf() -> None:
     <table>
       <tr><th>Member</th><th>ID / Handle</th><th>Role</th><th>Primary Responsibilities</th></tr>
       <tr><td><strong>Đinh Nhật Cảm</strong></td><td><code>24Ite019</code> / <code>@NhatCam2006</code></td><td>Human PM / Lead</td><td>Product vision, Gate 1–3 approvals, HITL sign-off, PR merges, UAT &amp; defense.</td></tr>
-      <tr><td><code>coordinator</code></td><td>AI Orchestrator</td><td>Scrum Master</td><td>6-day cadence, WBS delegation across isolated worktrees, stop-gate enforcement.</td></tr>
+      <tr><td><code>coordinator</code></td><td>AI Orchestrator</td><td>Scrum Master</td><td>6-stage cadence, WBS delegation across isolated worktrees, stop-gate enforcement.</td></tr>
       <tr><td><code>architect-mcp</code></td><td>AI Tech Lead</td><td>Architect / MCP</td><td>Pydantic v2 contracts, CI workflow, <code>sprintguard-mcp</code> 6-tool harness &amp; <code>SKILL.md</code>.</td></tr>
       <tr><td><code>backend-dev</code></td><td>AI Backend Dev</td><td>Backend Engineer</td><td>FastAPI, SQLite auto-seed, GitHub Client, Diff Filter, Clusterer, <code>pytest</code> &amp; <code>ruff</code>.</td></tr>
-      <tr><td><code>frontend-3d</code></td><td>AI Frontend Dev</td><td>Frontend / 3D</td><td>Interstellar UI, <code>Graph3DCanvas</code>, <code>Timeline2D</code>, 4-tab <code>SideInspector</code>, <code>vitest</code>.</td></tr>
-      <tr><td><code>qa-docs</code> / <code>docs-release</code></td><td>AI QA &amp; Release</td><td>QA &amp; QLDA Docs</td><td>Independent PR reviews, board snapshots, Wave 1–2 docs, 8 Drive deliverables.</td></tr>
+      <tr><td><code>frontend-3d</code></td><td>AI Frontend Dev</td><td>Frontend / 3D</td><td>Interstellar UI, <code>Graph3DCanvas</code>, <code>Timeline2D</code>, <code>SideInspector</code>, <code>vitest</code>.</td></tr>
+      <tr><td><code>qa-docs</code></td><td>AI QA &amp; Docs</td><td>QA &amp; QLDA Docs</td><td>Independent PR reviews, board snapshots, Wave 1–2 docs, 8 Drive deliverables.</td></tr>
     </table>
 
     <h2>11. Constraints, Assumptions &amp; Initial Risks</h2>
@@ -1113,31 +1113,31 @@ def build_wbs_pdf() -> None:
         ("1.1.4", "Sprint 1 Board Snapshots & Risk Wave 1 Actuals", "4 JSON board snapshots + Week 6 risk actuals revision", "Sprint 1 (M5)", "0.5d", "2", "qa-docs + coordinator", "#14", "Done"),
         ("1.5.1", "sprintguard-mcp FastMCP 6-Tool 5-Station Harness", "server.py + harness.py, valid_refs grounding & HITL gate", "Sprint 2 (M6)", "1.0d", "5", "architect-mcp", "#15", "Done"),
         ("1.5.2", "Antigravity SKILL.md, mcp_config.json & Live Test", "skills/sprintguard-auditor/SKILL.md + 6-tool live verification", "Sprint 2 (M6)", "0.5d", "3", "architect-mcp", "#16", "Done"),
-        ("1.6.1", "Deep AI Inspector Polish (+ CR-002 Vietnamese UI)", "Camera Fly-to, [X-Ray], Critic/HITL + 4-tab key_files/commits", "Sprint 2 (M7)", "0.5d", "3", "frontend-3d", "#17", "Done"),
-        ("1.6.2", "Dogfooding Audit & VKU Peer UAT Protocol", "aud_deep_995a9cba, aud_deep_faa0899d & 6-scenario UAT kit", "Sprint 2 (M7-8)", "1.0d", "5", "Human PM + coordinator", "#18", "Done"),
-        ("1.1.5", "Final 8 Google Drive Files, Wave 2 Risks & v1.0.0", "All 8 Drive deliverables, CR-001/002, Retros, PR #29", "Sprint 2 (M8-10)", "1.0d", "5", "docs-release + PM", "#19", "In Review"),
+        ("1.6.1", "Deep AI Inspector Polish (Fly-to & X-Ray)", "Camera Fly-to, [X-Ray] filter, Critic & HITL Inspector notes", "Sprint 2 (M7)", "0.5d", "3", "frontend-3d", "#17", "Done"),
+        ("1.6.2", "Dogfooding Audit & VKU Peer UAT Protocol", "Live vku-sprintguard audit & 6-scenario Peer UAT sign-off kit", "Sprint 2 (M7-8)", "1.0d", "5", "Human PM + coordinator", "#18", "Done"),
+        ("1.1.5", "Final 8 Google Drive Files, Wave 2 Risks & v1.0.0", "8 Drive deliverables, CCB record, Wave 2 Risks, Retros & v1.0.0", "Sprint 2 (M8-10)", "1.0d", "5", "qa-docs + PM", "#19", "Done"),
     ]
     rows_html = "".join(
         f"<tr><td><code>{r[0]}</code></td><td><strong>{r[1]}</strong><br/><span class='muted'>{r[2]}</span></td>"
         f"<td class='center'>{r[3]}</td><td class='center'>{r[4]}</td><td class='center'><strong>{r[5]}</strong></td>"
         f"<td>{r[6]}</td><td class='center'>{r[7]}</td>"
-        f"<td class='center'><span class='badge {'badge-ok' if r[8]=='Done' else 'badge-amber'}'>{r[8]}</span></td></tr>"
+        f"<td class='center'><span class='badge badge-ok'>{r[8]}</span></td></tr>"
         for r in wbs_rows
     )
 
     body = f"""
     <div class="doc-header">
-      <div><div class="kicker">DELIVERABLE 03 · WBS &amp; WBS DICTIONARY</div><h1 style="margin:0;font-size:16pt;">WORK BREAKDOWN STRUCTURE (100% RULE)</h1></div>
+      <div><div class="kicker">WBS &amp; TỪ ĐIỂN GÓI CÔNG VIỆC</div><h1 style="margin:0;font-size:16pt;">WORK BREAKDOWN STRUCTURE (100% RULE)</h1></div>
       <div class="meta">VKU SprintGuard (VKU-SPM-GUARD)<br/>19 Leaf Packages · 63 Story Points</div>
     </div>
 
     <h2>1. Scope Baseline &amp; 100% Rule Verification</h2>
     <p>This deliverable-oriented WBS satisfies the <strong>100% Rule</strong>: branches <code>1.1</code> through <code>1.6</code> decompose 100% of Project Charter §5.1 In-Scope commitments into 19 verifiable leaf work packages mapped 1:1 to GitHub Issues <code>#1</code>–<code>#19</code>, with 0% leakage of §5.2 Out-of-Scope items.</p>
     <table>
-      <tr><th>Scope Partition</th><th>WBS Branches</th><th class="center">Issues</th><th class="center">Story Points</th><th>Final Closure Status</th></tr>
-      <tr><td><strong>Sprint 1 — Initiation &amp; Local-First MVP</strong> (Days 1–3)</td><td><code>1.1.1</code>–<code>1.1.4</code>, <code>1.2.*</code>, <code>1.3.*</code>, <code>1.4.1</code></td><td class="center">#1 – #14 (14)</td><td class="center"><strong>42 SP</strong></td><td>100% Done &amp; Merged (PR #20–#24)</td></tr>
-      <tr><td><strong>Sprint 2 — MCP Harness, Dogfooding &amp; Closure</strong> (Days 4–6)</td><td><code>1.1.5</code>, <code>1.5.1</code>–<code>1.5.2</code>, <code>1.6.1</code>–<code>1.6.2</code></td><td class="center">#15 – #19 (5)</td><td class="center"><strong>21 SP</strong></td><td>16 SP Done (PR #25–#28); 5 SP In Review (PR #29)</td></tr>
-      <tr><td colspan="2"><strong>Total Project Baseline</strong></td><td class="center"><strong>19 Issues</strong></td><td class="center"><strong>63 SP</strong></td><td><strong>100% Implemented (58 Done + 5 In Review)</strong></td></tr>
+      <tr><th>Scope Partition</th><th>WBS Branches</th><th class="center">Issues</th><th class="center">Story Points</th><th>Closure Status</th></tr>
+      <tr><td><strong>Sprint 1 — Initiation &amp; Local-First MVP</strong> (Stages 1–3)</td><td><code>1.1.1</code>–<code>1.1.4</code>, <code>1.2.*</code>, <code>1.3.*</code>, <code>1.4.1</code></td><td class="center">#1 – #14 (14)</td><td class="center"><strong>42 SP</strong></td><td>100% Done (23/11/2026)</td></tr>
+      <tr><td><strong>Sprint 2 — MCP Harness, Dogfooding &amp; Closure</strong> (Stages 4–6)</td><td><code>1.1.5</code>, <code>1.5.1</code>–<code>1.5.2</code>, <code>1.6.1</code>–<code>1.6.2</code></td><td class="center">#15 – #19 (5)</td><td class="center"><strong>21 SP</strong></td><td>100% Done (24–25/11/2026)</td></tr>
+      <tr><td colspan="2"><strong>Total Project Baseline</strong></td><td class="center"><strong>19 Issues</strong></td><td class="center"><strong>63 SP</strong></td><td><strong>63 / 63 SP Done (100%)</strong></td></tr>
     </table>
 
     <h2>2. Deliverable-Oriented WBS Tree (1.0 VKU SprintGuard)</h2>
@@ -1147,7 +1147,7 @@ def build_wbs_pdf() -> None:
 │   ├── 1.1.2 GitHub Actions CI &amp; Python 3.11 / Node 26 Build Smoke [M1] -&gt; #2 (3 SP)
 │   ├── 1.1.3 Milestones, 19 Issues, Branch Protection &amp; 5-Col Board [M2] -&gt; #3 (2 SP)
 │   ├── 1.1.4 Sprint 1 Board Snapshots &amp; Risk Wave 1 Actuals [M5] -&gt; #14 (2 SP)
-│   └── 1.1.5 Final 8 Drive Files, CR-001/002, Wave 2 Risks &amp; v1.0.0 [M8-M10] -&gt; #19 (5 SP)
+│   └── 1.1.5 Final 8 Drive Files, CCB Record, Wave 2 Risks &amp; v1.0.0 [M8-M10] -&gt; #19 (5 SP)
 ├── 1.2 Backend Core &amp; Telemetry Engine (16 SP)
 │   ├── 1.2.1 FastAPI Skeleton, Pydantic v2 Schemas, CORS &amp; /health [M3] -&gt; #4 (3 SP)
 │   ├── 1.2.2 SQLite Store &amp; Idempotent Startup Auto-Seed [M3] -&gt; #5 (3 SP)
@@ -1165,7 +1165,7 @@ def build_wbs_pdf() -> None:
 │   ├── 1.5.1 sprintguard-mcp FastMCP 6-Tool 5-Station Harness [M6] -&gt; #15 (5 SP)
 │   └── 1.5.2 Antigravity SKILL.md, mcp_config.json &amp; 6-Tool Live Test [M6] -&gt; #16 (3 SP)
 └── 1.6 Deep AI Inspector Polish, Dogfooding &amp; Peer UAT (8 SP)
-    ├── 1.6.1 Camera Fly-to, [X-Ray], Critic/HITL &amp; CR-002 Vietnamese UI [M7] -&gt; #17 (3 SP)
+    ├── 1.6.1 Camera Fly-to, [X-Ray] Filter &amp; Critic/HITL Inspector [M7] -&gt; #17 (3 SP)
     └── 1.6.2 Dogfooding Audit &amp; VKU Peer UAT Protocol [M7-M8] -&gt; #18 (5 SP)</pre>
 
     <div class="page-break"></div>
@@ -1175,15 +1175,15 @@ def build_wbs_pdf() -> None:
       {rows_html}
     </table>
 
-    <h2>4. Six-Day Accelerated Execution Roadmap (Mapped to Weeks 1–15)</h2>
+    <h2>4. Planned 6-Stage Baseline vs. Actual 3-Day Execution (23–25/11/2026)</h2>
     <table>
-      <tr><th class="center" style="width:8%;">Day</th><th style="width:16%;">Sprint</th><th style="width:14%;">Milestones</th><th>Completed Deliverables &amp; Gate Actions</th><th style="width:14%;">PR Cadence</th></tr>
-      <tr><td class="center"><strong>Day 1</strong></td><td>Sprint 1</td><td>M1 &amp; M2</td><td>Charter, WBS, Risk Wave 1, CI workflow, Python 3.11/Node 26 smoke, PM Gate 1, Projects v2 Board &amp; Start Snapshot.</td><td>PR #20, PR #21</td></tr>
-      <tr><td class="center"><strong>Day 2</strong></td><td>Sprint 1</td><td>M3</td><td>FastAPI backend, SQLite auto-seed, GitHub Client, Diff Filter, 40-module Clusterer, <code>/api/preview</code>, pytest + ruff, Mid Snapshot.</td><td>PR #22</td></tr>
-      <tr><td class="center"><strong>Day 3</strong></td><td>Sprint 1</td><td>M4 &amp; M5</td><td>Interstellar 3D UI, Graph3DCanvas, Timeline2D, Localhost Dual-Server E2E, Wave 1 Actuals &amp; PM Gate 2 Stop Checkpoint.</td><td>PR #23, PR #24</td></tr>
-      <tr><td class="center"><strong>Day 4</strong></td><td>Sprint 2</td><td>M6</td><td><code>sprintguard-mcp</code> FastMCP 6-tool 5-station harness, <code>valid_refs</code>, HITL gate, <code>SKILL.md</code> &amp; live 6-tool test.</td><td>PR #25</td></tr>
-      <tr><td class="center"><strong>Day 5</strong></td><td>Sprint 2</td><td>M7</td><td>Camera Fly-to, <code>[X-Ray]</code> filter, Critic/HITL display, Dogfooding (<code>aud_deep_995a9cba</code>), VKU Peer UAT Kit &amp; Day 5 Snapshot.</td><td>PR #26, PR #27</td></tr>
-      <tr><td class="center"><strong>Day 6</strong></td><td>Sprint 2</td><td>M8–M10</td><td>CR-002 Explainable Vietnamese 3D UI (<code>aud_deep_faa0899d</code>), Wave 2 Risks, Retros, CCB Record, 8 Drive Deliverables.</td><td>PR #28, PR #29</td></tr>
+      <tr><th class="center" style="width:12%;">Stage / Date</th><th style="width:13%;">Sprint</th><th style="width:13%;">Milestones</th><th>Completed Deliverables &amp; Gate Actions</th><th style="width:14%;">PR Cadence</th></tr>
+      <tr><td class="center"><strong>Stage 1</strong><br/><span class="muted">23/11/2026</span></td><td>Sprint 1</td><td>M1 &amp; M2</td><td>Charter, WBS, Risk Wave 1, CI workflow, Python 3.11/Node 26 smoke, PM Gate 1, Projects v2 Board &amp; Start Snapshot.</td><td>PR #20, PR #21</td></tr>
+      <tr><td class="center"><strong>Stage 2</strong><br/><span class="muted">23/11/2026</span></td><td>Sprint 1</td><td>M3</td><td>FastAPI backend, SQLite auto-seed, GitHub Client, Diff Filter, 40-module Clusterer, <code>/api/preview</code>, pytest + ruff, Mid Snapshot.</td><td>PR #22</td></tr>
+      <tr><td class="center"><strong>Stage 3</strong><br/><span class="muted">23/11/2026</span></td><td>Sprint 1</td><td>M4 &amp; M5</td><td>Interstellar 3D UI, Graph3DCanvas, Timeline2D, Localhost Dual-Server E2E, Wave 1 Actuals &amp; PM Gate 2 Stop Checkpoint.</td><td>PR #23, PR #24</td></tr>
+      <tr><td class="center"><strong>Stage 4</strong><br/><span class="muted">24/11/2026</span></td><td>Sprint 2</td><td>M6</td><td><code>sprintguard-mcp</code> FastMCP 6-tool 5-station harness, <code>valid_refs</code>, HITL gate, <code>SKILL.md</code> &amp; live 6-tool test.</td><td>PR #25</td></tr>
+      <tr><td class="center"><strong>Stage 5</strong><br/><span class="muted">25/11/2026</span></td><td>Sprint 2</td><td>M7</td><td>Camera Fly-to, <code>[X-Ray]</code> filter, Critic/HITL display, Dogfooding (<code>aud_deep_995a9cba</code>), VKU Peer UAT Kit &amp; Day 5 Snapshot.</td><td>PR #26, PR #27</td></tr>
+      <tr><td class="center"><strong>Stage 6</strong><br/><span class="muted">25/11/2026</span></td><td>Sprint 2</td><td>M8–M10</td><td>Approved <code>CR-002</code> (<code>PR #28</code>), Wave 2 Risks, Retros, CCB Record, 8 Drive Deliverables &amp; Release <code>v1.0.0</code>.</td><td>PR #28, PR #29</td></tr>
     </table>
     """
     render_html_to_pdf(
@@ -1532,7 +1532,7 @@ def build_risk_register_excel() -> None:
 def build_retrospectives_pdf() -> None:
     body = """
     <div class="doc-header">
-      <div><div class="kicker">DELIVERABLE 05 · SPRINT RETROSPECTIVES</div><h1 style="margin:0;font-size:16pt;">SPRINT 1 (4Ls) &amp; FINAL PROJECT (SAILBOAT)</h1></div>
+      <div><div class="kicker">BIÊN BẢN HỒI CỨU SPRINT · RETROSPECTIVES</div><h1 style="margin:0;font-size:16pt;">SPRINT 1 (4Ls) &amp; FINAL PROJECT (SAILBOAT)</h1></div>
       <div class="meta">VKU SprintGuard (VKU-SPM-GUARD)<br/>PM: Đinh Nhật Cảm (24Ite019)</div>
     </div>
 
@@ -1614,7 +1614,7 @@ def build_retrospectives_pdf() -> None:
         <h3>Island (Vision Achieved)</h3>
         <ul>
           <li><strong>63 / 63 SP</strong> implemented across 19 Issues with 6 chronological board snapshots.</li>
-          <li><strong>71.8% risk reduction</strong> (Wave 1 avg <code>5.18</code> → Wave 2 avg <code>1.46</code>).</li>
+          <li><strong>75.4% risk reduction</strong> (Wave 1 avg <code>5.64</code> → Wave 2 avg <code>1.38</code>, sum <code>62 → 18</code>).</li>
           <li><strong>8 Google Drive Deliverables</strong> ready at <code>$0</code> cost, proving <em>Decision Support beats 0–100 Automated Grading</em>.</li>
         </ul>
       </div>
@@ -1632,7 +1632,7 @@ def build_retrospectives_pdf() -> None:
 def build_ccb_pdf() -> None:
     body = """
     <div class="doc-header">
-      <div><div class="kicker">DELIVERABLE 06 · SCOPE CHANGE CONTROL RECORD</div><h1 style="margin:0;font-size:16pt;">CCB CHANGE LOG, CR-001 &amp; CR-002</h1></div>
+      <div><div class="kicker">HỒ SƠ KIỂM SOÁT THAY ĐỔI · CHANGE CONTROL</div><h1 style="margin:0;font-size:16pt;">CCB CHANGE LOG, CR-001 &amp; CR-002</h1></div>
       <div class="meta">VKU SprintGuard (VKU-SPM-GUARD)<br/>CCB Chair: Đinh Nhật Cảm (24Ite019)</div>
     </div>
 
@@ -1659,7 +1659,7 @@ def build_ccb_pdf() -> None:
       <p><strong>Approved Modification:</strong></p>
       <ul>
         <li><strong>Backend &amp; MCP (<code>c876e76</code>):</strong> Extended <code>GraphNode</code> with backward-compatible Vietnamese <code>description</code>, real <code>key_files</code> extracted from git diffs, and <code>commit_highlights</code> with clickable GitHub commit URLs.</li>
-        <li><strong>Frontend (<code>8ba2815</code>):</strong> Upgraded <code>SideInspector.tsx</code> into a structured <strong>4-tab Vietnamese Inspector</strong> (<code>Tổng quan</code>, <code>Chi tiết nút</code>, <code>Tín hiệu &amp; Phản biện</code>, <code>Câu hỏi vấn đáp</code>).</li>
+        <li><strong>Frontend (<code>8ba2815</code>):</strong> Upgraded <code>SideInspector.tsx</code> into a structured <strong>4-tab Vietnamese Inspector</strong> (<code>Tổng quan</code>, <code>Thành phần</code>, <code>Thành viên &amp; Commit</code>, <code>Vấn đáp</code>).</li>
       </ul>
       <p><strong>Verification Evidence:</strong> Merged via <code>PR #28</code> (<code>67ca6b0</code>) with <code>22</code> pytest + <code>6</code> vitest (100% CI pass) and <code>0 days</code> schedule slip (tracked as <code>R12</code>/<code>R13</code>). Verified live via Deep AI Audit <code>aud_deep_faa0899d</code> on <code>fastapi/typer</code>.</p>
     </div>
@@ -1685,7 +1685,7 @@ def build_ccb_pdf() -> None:
 def build_uat_signoff_pdf() -> None:
     body = """
     <div class="doc-header">
-      <div><div class="kicker">DELIVERABLE 07 · STAKEHOLDER ACCEPTANCE &amp; UAT SIGN-OFF</div><h1 style="margin:0;font-size:15.5pt;">DOGFOODING EVIDENCE &amp; VKU PEER UAT PROTOCOL</h1></div>
+      <div><div class="kicker">NGHIỆM THU BÊN LIÊN QUAN · UAT SIGN-OFF</div><h1 style="margin:0;font-size:15.5pt;">DOGFOODING EVIDENCE &amp; VKU PEER UAT PROTOCOL</h1></div>
       <div class="meta">Pathway 3: VKU Campus Need<br/>PM: Đinh Nhật Cảm (24Ite019)</div>
     </div>
 
@@ -2414,12 +2414,8 @@ def main() -> None:
     build_ccb_pdf()
     print("  [6/9] 06_Scope_Change_Control_Record.pdf")
     build_uat_signoff_pdf()
-    print("  [7/9] 07_Stakeholder_Acceptance_Signoff.pdf")
-    build_presentation_pptx()
-    print("  [8/9] 08_Presentation_Slide_Deck.pptx")
-    build_presentation_pdf()
-    print("  [9/9] 08_Presentation_Slide_Deck.pdf")
-    print("Done.")
+    print("  [7/7] 07_Stakeholder_Acceptance_Signoff.pdf")
+    print("Done (08_Presentation_Slide_Deck.* authored via ppt-master).")
 
 
 if __name__ == "__main__":
